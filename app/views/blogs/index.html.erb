@@ -1,0 +1,13 @@
+<h1>Blogs</h1>
+<% flash.each do |name, msg| -%>
+      <%= content_tag :div, msg, class: name %>
+    <% end -%>
+<ul>
+  <% @blogs.each do |blog| %>
+    <li>
+      <%= link_to blog.title, blog %>
+    </li>
+  <% end %><br>
+  <%= link_to "New Blog", new_blog_path %>
+</ul>
+

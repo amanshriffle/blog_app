@@ -1,0 +1,34 @@
+<%= form_with model: blog do |form| %>
+  <div>
+    <%= form.label :title %><br>
+    <%= form.text_field :title %>
+    <% blog.errors.full_messages_for(:title).each do |message| %>
+      <div><%= message %></div>
+    <% end %>
+  </div> <br>
+
+  <div>
+    <%= form.label :body %><br>
+    <%= form.text_area :body %>
+    <% blog.errors.full_messages_for(:body).each do |message| %>
+      <div><%= message %></div>
+    <% end %>
+  </div><br>
+
+  <div>
+    <%= form.label :visible %>
+    <%= form.check_box :visible %>
+  </div><br>
+
+  <div>
+    <%= form.label :user_id %>
+    <%= form.text_field :user_id %>
+    <% blog.errors.full_messages_for(:user_id).each do |message| %>
+      <div><%= message %></div>
+    <% end %>
+  </div><br>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

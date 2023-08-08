@@ -1,0 +1,15 @@
+<h2><%= @blog.title %></h2>
+<p><%= @blog.body %></p>
+<span>Posted at: <%= @blog.created_at.to_s.slice(0, 19) %></span><br><br>
+
+<span><%= link_to "Edit", edit_blog_path(@blog) %></span>
+<span><%= link_to "Destroy", blog_path(@blog), data: {
+                                                 turbo_method: :delete,
+                                                 turbo_confirm: "Are you sure?",
+                                               } %></span><br><br>
+
+<h3>Add a comment:</h3>
+<%= render "comments/form" %>
+
+<h3>Comments:</h3>
+<%= render @comments %>
