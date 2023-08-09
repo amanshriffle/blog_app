@@ -39,6 +39,22 @@ class BlogsController < ApplicationController
     @blog.destroy
   end
 
+  def like
+    @blog = Blog.find(params[:blog_id])
+    @like = @blog.likes.create(user_id: params[:user_id])
+
+    redirect_to @blog
+  end
+
+  def unlike
+    @blog = Blog.find(params[:blog_id])
+    @like = @blog.likes.find_by(user_id: params[:user_id])
+
+    @like.destroy
+
+    redirect_to @blog
+  end
+
   private def blog_params
     params[:title] = params[:title].titleize
     params[:body] = params[:body].capitalize

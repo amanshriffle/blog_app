@@ -1,24 +1,22 @@
 class NotificationsController < ApplicationController
   def index
     @user = User.find params[:user_id]
-    @notificaitons = @user.notifications
+    @notifications = @user.notifications
 
-    render json: @notificaitons
+    render json: @notifications
   end
 
   def show
     @user = User.find params[:user_id]
-    @notificaitons = @user.notifications.find params[:id]
+    @notifications = @user.notifications.find params[:id]
 
-    render json: @notificaitons.refer_to
+    render json: @notifications.refer_to
   end
 
   def destroy
     @user = User.find params[:user_id]
-    @notificaitons = @user.notifications.find params[:id]
+    @notifications = @user.notifications.find params[:id]
 
     @notifications.destroy
-
-    render :index
   end
 end
