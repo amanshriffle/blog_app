@@ -6,7 +6,7 @@ class BlogsController < ApplicationController
 
   def show
     @blog = Blog.find(params[:id])
-    @comments = @blog.comments.includes(:replies)
+    @comments = @blog.comments.where(replied_on: nil)
     render json: [@blog, @comments]
   end
 
@@ -17,6 +17,8 @@ class BlogsController < ApplicationController
   def create
     @blog = Blog.new(blog_params)
     render json: @blog if @blog.save
+
+    render json: @blog.errors.full_messages
   end
 
   def edit

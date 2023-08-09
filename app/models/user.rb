@@ -14,8 +14,4 @@ class User < ApplicationRecord
   validates :username, presence: true, uniqueness: true, length: { in: 3..10 }, format: { with: /\A[a-zA-Z][A-Za-z0-9_]+\z/, message: "can only contain characters, digit and uderscore." }
   validates :first_name, :last_name, presence: true, length: { in: 3..10 }, format: { with: /\A[a-zA-Z]+\z/, message: "Please enter valid name" }
   validates :email, presence: true, uniqueness: true, format: { with: /\A[a-z][\w\d+\-.]+@[\w\d\-]+\.[a-z]{2,3}\z/, message: "is invalid" }
-
-  def what_self
-    self
-  end
 end

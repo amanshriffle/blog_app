@@ -1,6 +1,6 @@
 class Blog < ApplicationRecord
   belongs_to :user, counter_cache: true
-  has_many :comments, -> { where replied_on: nil }, dependent: :destroy
+  has_many :comments, dependent: :destroy
   has_many :likes, dependent: :destroy
   has_many :pictures, as: :imageable, dependent: :destroy
 
