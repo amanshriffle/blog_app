@@ -14,9 +14,18 @@ class CommentsController < ApplicationController
   end
 
   def show
-    @comment = Blog.find(params[:blog_id]).comments.find(params[:id])
+    @comment = Comment.find(params[:id])
     @replies = @comment.replies
+
     render json: [@comment, @replies]
+  end
+
+  def destroy
+    @blog = Blog.find(params[:blog_id])
+    @comment = @blog.comments.find(params[:id])
+    @comment.destroy
+
+    render @blog
   end
 
   private

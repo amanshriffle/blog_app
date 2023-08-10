@@ -16,7 +16,9 @@ class BlogsController < ApplicationController
 
   def create
     @blog = Blog.new(blog_params)
-    render json: @blog if @blog.save
+    return render json: @blog if @blog.save
+
+    render json: @blog.errors.full_messages, status: :expectation_failed
   end
 
   def edit
@@ -37,9 +39,32 @@ class BlogsController < ApplicationController
     @blog.destroy
   end
 
+  def like
+    @blog = Blog.find(params[:blog_id])
+    @like = @blog.likes.create(user_id: params[:user_id])
+
+    redirect_to @blog
+  end
+
+  def unlike
+    @blog = Blog.find(params[:blog_id])
+    @like = @blog.likes.find_by(user_id: params[:user_id])
+
+    @like.destroy
+
+    redirect_to @blog
+  end
+
+  def likes
+    @blog = Blog.find(params[:blog_id])
+    @like = @blog.like_by_users
+
+    render json: @like
+  end
+
   private def blog_params
-    params[:title] = params[:title].titleize
-    params[:body] = params[:body].capitalize
+    params[:title] = params[:title].titleize unless params[:title].nil?
+    params[:body] = params[:body].capitalize unless params[:body].nil?
 
     params.permit(:title, :body, :visible, :user_id)
   end
