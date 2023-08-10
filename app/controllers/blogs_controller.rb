@@ -6,7 +6,7 @@ class BlogsController < ApplicationController
 
   def show
     @blog = Blog.find(params[:id])
-    @comments = @blog.comments.includes(:replies)
+    @comments = @blog.comments.where(replied_on: nil)
     render json: [@blog, @comments]
   end
 

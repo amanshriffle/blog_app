@@ -1,7 +1,7 @@
 class CommentsController < ApplicationController
   def index
     @blog = Blog.find(params[:blog_id])
-    @comment = @blog.comments
+    @comment = @blog.comments.where(replied_on: nil)
 
     render json: @comment
   end
@@ -25,7 +25,7 @@ class CommentsController < ApplicationController
     @comment = @blog.comments.find(params[:id])
     @comment.destroy
 
-    render @blog
+    redirect_to @blog
   end
 
   private

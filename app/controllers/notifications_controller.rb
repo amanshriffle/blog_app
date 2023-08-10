@@ -1,23 +1,25 @@
 class NotificationsController < ApplicationController
-  def index
-    @user = User.find params[:user_id]
-    @notifications = @user.notifications
+  before_action :user_notifications
 
+  def index
     render json: @notifications
   end
 
   def show
-    @user = User.find params[:user_id]
-    @notifications = @user.notifications.find params[:id]
-
-    refer_to = @notifications.refer_to
+    refer_to = @notification.refer_to
     redirect_to refer_to
   end
 
   def destroy
-    @user = User.find params[:user_id]
-    @notifications = @user.notifications.find params[:id]
+    @notification.destroy
+    redirect_to "/notifications?user_id=#{params[:user_id]}"
+  end
 
-    @notifications.destroy
+  private
+
+  def user_notifications
+    @user = User.find params[:user_id]
+    @notifications = @user.notifications
+    @notification = @notifications.find params[:id] unless params[:id].nil?
   end
 end

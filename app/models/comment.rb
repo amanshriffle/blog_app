@@ -8,7 +8,6 @@ class Comment < ApplicationRecord
   after_commit :notify_user, on: :create
 
   validates :comment, presence: true, length: { in: 1..100 }
-  validates :user_id, :blog_id, presence: true, numericality: { only_integer: true }
 
   private def notify_user
     if replied_on == nil
