@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   resources :blogs do
     get "/like", to: "blogs#like"
-    delete "/unlike", to: "blogs#unlike"
+    get "/unlike", to: "blogs#unlike"
     get "/likes", to: "blogs#likes"
 
     resources :comments, shallow: true do
@@ -13,4 +13,10 @@ Rails.application.routes.draw do
 
   get "/users/:id", to: "users#show", as: :user
   resources :notifications, only: [:index, :show, :destroy]
+
+  get "/followers", to: "follow#followers"
+  get "/following", to: "follow#following"
+  get "/followers/:id", to: "follow#show_follower"
+  get "/following/:id", to: "follow#show_following"
+  get "/unfollow/:id", to: "follow#destroy"
 end

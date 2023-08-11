@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::API
+  include ActionController::HttpAuthentication::Token::ControllerMethods
+
   private
 
   def current_user

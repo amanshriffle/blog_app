@@ -23,4 +23,4 @@ Things you may want to cover:
 
 * ...
 
-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
+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

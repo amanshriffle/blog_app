@@ -1,4 +1,8 @@
 class BlogsController < ApplicationController
+  TOKEN = "Aman"
+
+  before_action :authenticate
+
   def index
     @blogs = Blog.visible
     render json: @blogs
@@ -10,19 +14,11 @@ class BlogsController < ApplicationController
     render json: [@blog, @comments]
   end
 
-  def new
-    @blog = Blog.new
-  end
-
   def create
     @blog = Blog.new(blog_params)
-    return render json: @blog if @blog.save
+    return redirect_to @blog if @blog.save
 
-    render json: @blog.errors.full_messages, status: :expectation_failed
-  end
-
-  def edit
-    @blog = Blog.find(params[:id])
+    render json: @blog.errors, status: :expectation_failed
   end
 
   def update
@@ -30,13 +26,15 @@ class BlogsController < ApplicationController
     if @blog.update(blog_params)
       redirect_to @blog
     else
-      render :edit, status: :unprocessable_entity
+      render @blog, status: :unprocessable_entity
     end
   end
 
   def destroy
     @blog = Blog.find(params[:id])
     @blog.destroy
+
+    redirect_to blogs_url
   end
 
   def like
@@ -62,10 +60,18 @@ class BlogsController < ApplicationController
     render json: @like
   end
 
-  private def blog_params
+  private
+
+  def blog_params
     params[:title] = params[:title].titleize unless params[:title].nil?
     params[:body] = params[:body].capitalize unless params[:body].nil?
 
     params.permit(:title, :body, :visible, :user_id)
+  end
+
+  def authenticate
+    authenticate_or_request_with_http_token do |token, options|
+      ActiveSupport::SecurityUtils.secure_compare(token, TOKEN)
+    end
   end
 end

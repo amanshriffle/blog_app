@@ -4,7 +4,6 @@ class FollowersFollowing < ApplicationRecord
   belongs_to :user
   belongs_to :follower_user, class_name: "User"
 
-  validates :user_id, :follower_user_id, presence: true, numericality: { only_integer: true }
   validate :following_self?, :already_following_user?
 
   after_commit :notify_user, on: :create
