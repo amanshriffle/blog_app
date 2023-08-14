@@ -5,11 +5,13 @@ class Comment < ApplicationRecord
   has_many :replies, class_name: "Comment", foreign_key: "replied_on", dependent: :destroy
   belongs_to :replied_on, class_name: "Comment", foreign_key: "replied_on", optional: true
 
-  after_commit :notify_user, on: :create
+  after_create :notify_user
 
   validates :comment, presence: true, length: { in: 1..100 }
 
-  private def notify_user
+  private
+
+  def notify_user
     if replied_on == nil
       Notification.create(
         notification_text: "#{User.find(user_id).username} commented on your post (#{Blog.find(blog_id).title}).",

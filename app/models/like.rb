@@ -6,13 +6,15 @@ class Like < ApplicationRecord
 
   after_create :notify_user
 
-  private def user_already_liked?
+  private
+
+  def user_already_liked?
     unless Like.find_by(blog_id: blog_id, user_id: user_id) == nil
       errors.add :user_id, "You have already liked the blog"
     end
   end
 
-  private def notify_user
+  def notify_user
     Notification.create(
       notification_text: "#{User.find(user_id).username} liked on your post (#{Blog.find(blog_id).title}).",
       refer_to_id: blog_id,

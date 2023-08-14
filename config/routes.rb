@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   root "blogs#index"
+  post "/login", to: "authentication#login"
 
   resources :blogs do
     get "/like", to: "blogs#like"

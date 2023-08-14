@@ -16,13 +16,14 @@ class BlogsController < ApplicationController
 
   def create
     @blog = Blog.new(blog_params)
-    return redirect_to @blog if @blog.save
+    return render json: @blog, status: :created if @blog.save
 
-    render json: @blog.errors, status: :expectation_failed
+    render json: @blog.errors, status: :unprocessable_entity
   end
 
   def update
     @blog = Blog.find(params[:id])
+
     if @blog.update(blog_params)
       redirect_to @blog
     else
@@ -46,7 +47,7 @@ class BlogsController < ApplicationController
 
   def unlike
     @blog = Blog.find(params[:blog_id])
-    @like = @blog.likes.find_by(user_id: params[:user_id])
+    @like = @blog.likes.find_by_user_id(params[:user_id])
 
     @like.destroy
 
@@ -63,8 +64,8 @@ class BlogsController < ApplicationController
   private
 
   def blog_params
-    params[:title] = params[:title].titleize unless params[:title].nil?
-    params[:body] = params[:body].capitalize unless params[:body].nil?
+    params[:title] = params[:title]&.titleize
+    params[:body] = params[:body]&.capitalize
 
     params.permit(:title, :body, :visible, :user_id)
   end

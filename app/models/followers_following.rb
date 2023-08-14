@@ -6,21 +6,23 @@ class FollowersFollowing < ApplicationRecord
 
   validate :following_self?, :already_following_user?
 
-  after_commit :notify_user, on: :create
+  after_create :notify_user
 
-  private def following_self?
+  private
+
+  def following_self?
     if follower_user_id == user_id
       errors.add :follower_user_id, "You can not follow yourself"
     end
   end
 
-  private def already_following_user?
+  def already_following_user?
     unless FollowersFollowing.where(user_id: user_id).find_by(follower_user_id: follower_user_id) == nil
       errors.add :follower_user_id, "You are already following #{User.find(user_id).username}"
     end
   end
 
-  private def notify_user
+  def notify_user
     Notification.create(
       notification_text: "#{User.find(follower_user_id).username} started following you.",
       refer_to_id: follower_user_id,

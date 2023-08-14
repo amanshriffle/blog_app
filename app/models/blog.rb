@@ -1,6 +1,7 @@
 class Blog < ApplicationRecord
   belongs_to :user, counter_cache: true
-  has_many :comments, dependent: :destroy
+  has_many :comments, -> { order created_at: :desc }, dependent: :destroy
+
   has_many :likes, dependent: :destroy
   has_many :like_by_users, through: :likes, source: :user, dependent: :destroy
 
@@ -16,8 +17,9 @@ class Blog < ApplicationRecord
   scope :not_visible, -> { where visible: false }
 
   private def notify_user
-    followers = User.find(user_id).follower_users
-    username = User.find(user_id).username
+    user = User.find(user_id)
+    followers = user.follower_users
+    username = user.username
 
     followers.each do |f|
       Notification.create(

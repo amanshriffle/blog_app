@@ -8,8 +8,12 @@ class User < ApplicationRecord
   has_many :follower_users, through: :followers, source: :follower_user
   has_many :following_users, through: :following, source: :user
 
-  has_many :likes, through: :blogs, source: :user
-  has_many :notifications
+  has_many :likes, dependent: :destroy
+  has_many :liked_blogs, through: :likes, source: :blog
+
+  has_many :notifications, -> { order "created_at DESC" }, dependent: :destroy
+
+  has_secure_password
 
   validates :username, presence: true, uniqueness: true, length: { in: 3..10 }, format: { with: /\A[a-zA-Z][A-Za-z0-9_]+\z/, message: "can only contain characters, digit and uderscore." }
   validates :first_name, :last_name, presence: true, length: { in: 3..10 }, format: { with: /\A[a-zA-Z]+\z/, message: "Please enter valid name" }
