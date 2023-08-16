@@ -1,7 +1,5 @@
 class BlogsController < ApplicationController
-  TOKEN = "Aman"
-
-  before_action :authenticate
+  skip_before_action :authenticate_request, only: [:index, :likes, :show]
 
   def index
     @blogs = Blog.visible
@@ -9,8 +7,9 @@ class BlogsController < ApplicationController
   end
 
   def show
-    @blog = Blog.find(params[:id])
-    @comments = @blog.comments.where(replied_on: nil)
+    @blog = Blog.find(params[:id])&.includes(:comments)&.where("comments.replied_on" => nil)
+
+    @comments = @blog.comments
     render json: [@blog, @comments]
   end
 
@@ -40,7 +39,7 @@ class BlogsController < ApplicationController
 
   def like
     @blog = Blog.find(params[:blog_id])
-    @like = @blog.likes.create(user_id: params[:user_id])
+    @like = @blog.likes.create(user_id: @current_user.id)
 
     redirect_to @blog
   end
@@ -68,11 +67,5 @@ class BlogsController < ApplicationController
     params[:body] = params[:body]&.capitalize
 
     params.permit(:title, :body, :visible, :user_id)
-  end
-
-  def authenticate
-    authenticate_or_request_with_http_token do |token, options|
-      ActiveSupport::SecurityUtils.secure_compare(token, TOKEN)
-    end
   end
 end
