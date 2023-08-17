@@ -1,17 +1,11 @@
 class CommentsController < ApplicationController
   before_action :blog, only: [:index, :create]
-  before_action :comment, only: [:show, :destroy]
+  before_action :comment, only: [:show, :destroy, :update]
 
   def index
-    @comment = @blog.comments.where(replied_on: nil)
+    @comment = @blog.comments.where(replied_on_comment_id: nil)
 
     render json: @comment
-  end
-
-  def create
-    @comment = @blog.comments.create(comment_params)
-
-    render json: [@blog, @comment]
   end
 
   def show
@@ -20,23 +14,48 @@ class CommentsController < ApplicationController
     render json: [@comment, @replies]
   end
 
-  def destroy
-    comment.destroy if comment.user_id == @current_user.id
+  def create
+    params[:user_id] = @current_user.id
+    params[:replied_on_comment_id] = params[:comment_id] unless params[:comment_id].nil?
 
-    render json: comment, status: :see_other
+    @comment = @blog.comments.create(comment_params)
+
+    redirect_to @blog
+  end
+
+  def update
+    unless @comment.user_id == @current_user.id
+      render json: { error: "Only author can edit the comment." }, status: :unauthorized
+      return nil
+    end
+
+    if @comment.update(comment_params)
+      redirect_to @comment
+    else
+      render json: @comment, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    if @comment.user_id == @current_user.id
+      @comment.destroy
+      redirect_to @comment.blog
+    else
+      render json: { error: "Only author can delete the comment." }, status: :unauthorized
+    end
   end
 
   private
 
   def blog
-    @blog = Blog.find(params[:blog_id])
+    @blog = Blog.includes(:comments).find(params[:blog_id])
   end
 
   def comment
-    @comment = Comment.find(params[:id])
+    @comment = Comment.includes(:replies).find(params[:id])
   end
 
   def comment_params
-    params.permit(:comment, @current_user.id)
+    params.permit(:comment, :replied_on_comment_id, :user_id)
   end
 end

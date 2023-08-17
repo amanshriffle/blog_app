@@ -1,5 +1,6 @@
 class BlogsController < ApplicationController
   skip_before_action :authenticate_request, only: [:index, :likes, :show]
+  before_action :set_blog, except: [:index, :create]
 
   def index
     @blogs = Blog.visible
@@ -7,65 +8,73 @@ class BlogsController < ApplicationController
   end
 
   def show
-    @blog = Blog.find(params[:id])&.includes(:comments)&.where("comments.replied_on" => nil)
-
     @comments = @blog.comments
-    render json: [@blog, @comments]
+
+    render json: [@blog, @comments.where(replied_on_comment_id: nil)]
   end
 
   def create
-    @blog = Blog.new(blog_params)
-    return render json: @blog, status: :created if @blog.save
+    @blog = @current_user.blogs.build(blog_params)
 
-    render json: @blog.errors, status: :unprocessable_entity
+    if @blog.save
+      render json: @blog, status: :created
+    else
+      render json: @blog.errors, status: :unprocessable_entity
+    end
   end
 
   def update
-    @blog = Blog.find(params[:id])
+    unless @blog.user_id == @current_user.id
+      render json: { error: "Only author can edit the blog." }, status: :unauthorized
+      return nil
+    end
 
     if @blog.update(blog_params)
       redirect_to @blog
     else
-      render @blog, status: :unprocessable_entity
+      render json: @blog, status: :unprocessable_entity
     end
   end
 
   def destroy
-    @blog = Blog.find(params[:id])
-    @blog.destroy
+    if @blog.user_id == @current_user.id
+      @blog.destroy
+      redirect_to blogs_url
+    end
 
-    redirect_to blogs_url
+    render json: { error: "Only author can delete the blog." }, status: :unauthorized
   end
 
   def like
-    @blog = Blog.find(params[:blog_id])
-    @like = @blog.likes.create(user_id: @current_user.id)
+    @blog.likes.create(user_id: @current_user.id)
 
-    redirect_to @blog
+    render json: @blog
   end
 
   def unlike
-    @blog = Blog.find(params[:blog_id])
-    @like = @blog.likes.find_by_user_id(params[:user_id])
+    @like = @blog.likes.find_by_user_id(@current_user.id)
 
-    @like.destroy
+    @like&.destroy
 
-    redirect_to @blog
+    render json: @blog
   end
 
   def likes
-    @blog = Blog.find(params[:blog_id])
-    @like = @blog.like_by_users
+    @likes = @blog.like_by_users
 
-    render json: @like
+    render json: @likes
   end
 
   private
+
+  def set_blog
+    @blog = Blog.find(params[:id])
+  end
 
   def blog_params
     params[:title] = params[:title]&.titleize
     params[:body] = params[:body]&.capitalize
 
-    params.permit(:title, :body, :visible, :user_id)
+    params.permit(:title, :body, :visible)
   end
 end

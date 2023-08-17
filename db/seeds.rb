@@ -48,6 +48,10 @@
 
 users = User.all
 
-users.each_with_index do |user, i|
-  user.update(password: "user@#{user.id}")
+# users.each_with_index do |user, i|
+#   user.update(password: "user@#{user.id}")
+# end
+
+users.each_with_index do |u, i|
+  u.create_profile(first_name: "fname", last_name: "lname", date_of_birth: (Date.today - 18.years - i.month - i.year), about: "fname lname is a technology enthusiast with interest in Ruby on Rails")
 end

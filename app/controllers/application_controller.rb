@@ -10,6 +10,6 @@ class ApplicationController < ActionController::API
     header = header.split(" ").last if header
     decoded = jwt_decode(header)
 
-    @current_user = User.select(:id, :username, :first_name, :last_name, :blogs_count).find(decoded[:user_id])
+    @current_user = User.find(decoded[:user_id])
   end
 end

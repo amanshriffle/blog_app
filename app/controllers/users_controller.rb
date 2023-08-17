@@ -1,13 +1,19 @@
 class UsersController < ApplicationController
   skip_before_action :authenticate_request, only: :create
 
-  def create
-    user = User.new(user_params)
+  include ProfileParams
 
-    if user.save
-      render json: user, status: :created
+  def show
+    render json: @current_user
+  end
+
+  def sign_up
+    @user = User.new(user_params)
+
+    if @user.save
+      create_profile
     else
-      render json: user.errors, status: 422
+      render json: [@user.errors], status: 422
     end
   end
 
@@ -15,23 +21,30 @@ class UsersController < ApplicationController
     unless @current_user.update(user_params)
       render json: @current_user.errors, status: 422
     end
+
+    redirect_to user_path
   end
 
   def destroy
     @current_user.destroy
-  end
 
-  def profile
-    user = User.includes(:followers, :following).select(:id, :user_name, :first_name, :last_name).find(params[:id])
-    followers_count = user.followers.count
-    following_count = user.following.count
-
-    render json: [user, { Blogs: user.blogs_count, Followers: followers_count, Following: following_count }]
+    redirect_to login_path
   end
 
   private
 
+  def create_profile
+    profile = @user.build_profile(profile_params)
+
+    if profile.save
+      render json: [@user, profile], status: :created
+    else
+      @user.delete
+      render json: profile.errors, status: 422
+    end
+  end
+
   def user_params
-    params.permit(:user_name, :first_name, :last_name, :email)
+    params.permit(:username, :email, :password)
   end
 end

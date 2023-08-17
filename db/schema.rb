@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_14_133004) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_17_130045) do
   create_table "blogs", force: :cascade do |t|
     t.string "title"
     t.text "body"
@@ -29,7 +29,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_14_133004) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "replied_on"
+    t.integer "replied_on_comment_id"
     t.index ["blog_id"], name: "index_comments_on_blog_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
@@ -68,12 +68,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_14_133004) do
     t.index ["imageable_type", "imageable_id"], name: "index_pictures_on_imageable"
   end
 
-  create_table "users", force: :cascade do |t|
-    t.string "username"
+  create_table "profiles", force: :cascade do |t|
+    t.integer "user_id", null: false
     t.string "first_name"
     t.string "last_name"
+    t.date "date_of_birth"
+    t.string "about"
+    t.datetime "updated_at"
+    t.index ["user_id"], name: "index_profiles_on_user_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "username"
     t.string "email"
-    t.integer "blogs_count"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "password_digest"
@@ -86,4 +93,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_14_133004) do
   add_foreign_key "likes", "blogs"
   add_foreign_key "likes", "users"
   add_foreign_key "notifications", "users"
+  add_foreign_key "profiles", "users"
 end

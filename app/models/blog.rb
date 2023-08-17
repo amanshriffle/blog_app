@@ -3,7 +3,7 @@ class Blog < ApplicationRecord
   has_many :comments, -> { order created_at: :desc }, dependent: :destroy
 
   has_many :likes, dependent: :destroy
-  has_many :like_by_users, through: :likes, source: :user, dependent: :destroy
+  has_many :like_by_users, -> { select :username }, through: :likes, source: :user, dependent: :destroy
 
   has_many :pictures, as: :imageable, dependent: :destroy
 
@@ -17,7 +17,7 @@ class Blog < ApplicationRecord
   scope :not_visible, -> { where visible: false }
 
   private def notify_user
-    user = User.find(user_id)
+    user = User.includes(:follower_users).find(user_id)
     followers = user.follower_users
     username = user.username
 
