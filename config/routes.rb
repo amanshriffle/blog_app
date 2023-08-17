@@ -7,8 +7,8 @@ Rails.application.routes.draw do
 
   scope ":username" do
     get "/profile", to: "profiles#show"
-    get "/followers", to: "follow#show_follower"
-    get "/following", to: "follow#show_following"
+    get "/followers", to: "follow#followers"
+    get "/following", to: "follow#following"
   end
 
   get "/profiles", to: "profiles#index"
