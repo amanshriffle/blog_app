@@ -17,7 +17,7 @@ class FollowersFollowing < ApplicationRecord
   end
 
   def already_following_user?
-    unless FollowersFollowing.where(user_id: user_id).find_by(follower_user_id: follower_user_id) == nil
+    unless FollowersFollowing.find_by(user_id: user_id, follower_user_id: follower_user_id) == nil
       errors.add :follower_user_id, "You are already following #{User.find(user_id).username}"
     end
   end

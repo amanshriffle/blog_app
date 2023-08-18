@@ -2,17 +2,14 @@ class ProfilesController < ApplicationController
   include ProfileParams
 
   def index
-    render json: Profile.joins(:user).select("users.username, profiles.*")
+    render json: Profile.all
   end
 
   def show
-    @user_profile = User.eager_load(:followers, :following, :blogs, :profile).select("users.username, profiles.*").find_by_username(params[:username])
+    user = User.includes(:followers, :following, :blogs, :profile).find_by_username!(params[:username])
+    user_profile = user.profile
 
-    unless @user_profile.nil?
-      render json: [@user_profile, { Blogs: @user_profile.blogs.size, Followers: @user_profile.followers.size, Following: @user_profile.following.size }]
-    else
-      render json: { error: "User does not exist or enter valid username" }, status: 404
-    end
+    render json: [user_profile, { Blogs: user.blogs.size, Followers: user.followers.size, Following: user.following.size }]
   end
 
   def update

@@ -1,6 +1,7 @@
 class BlogsController < ApplicationController
   skip_before_action :authenticate_request, only: [:index, :likes, :show]
   before_action :set_blog, except: [:index, :create]
+  before_action :check_blog_author, only: [:update, :destroy]
 
   def index
     @blogs = Blog.visible
@@ -24,11 +25,6 @@ class BlogsController < ApplicationController
   end
 
   def update
-    unless @blog.user_id == @current_user.id
-      render json: { error: "Only author can edit the blog." }, status: :unauthorized
-      return nil
-    end
-
     if @blog.update(blog_params)
       redirect_to @blog
     else
@@ -41,8 +37,6 @@ class BlogsController < ApplicationController
       @blog.destroy
       redirect_to blogs_url
     end
-
-    render json: { error: "Only author can delete the blog." }, status: :unauthorized
   end
 
   def like
@@ -52,9 +46,8 @@ class BlogsController < ApplicationController
   end
 
   def unlike
-    @like = @blog.likes.find_by_user_id(@current_user.id)
-
-    @like&.destroy
+    @like = @blog.likes.find_by_user_id!(@current_user.id)
+    @like.destroy
 
     render json: @blog
   end
@@ -72,9 +65,12 @@ class BlogsController < ApplicationController
   end
 
   def blog_params
-    params[:title] = params[:title]&.titleize
-    params[:body] = params[:body]&.capitalize
-
     params.permit(:title, :body, :visible)
+  end
+
+  def check_blog_author
+    unless @blog.user_id == @current_user.id
+      raise ActiveRecord::ReadOnlyError, "Only author can edit or delete the blog."
+    end
   end
 end
