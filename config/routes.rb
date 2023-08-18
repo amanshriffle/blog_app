@@ -26,5 +26,4 @@ Rails.application.routes.draw do
   end
 
   resources :notifications, only: [:index, :show, :destroy]
-  get "/:username", to: redirect("/%{username}/profile")
 end

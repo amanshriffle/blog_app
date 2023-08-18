@@ -1,4 +1,5 @@
 class CommentsController < ApplicationController
+  include NotifyUser
   before_action :blog, only: [:index, :create]
   before_action :comment, only: [:show, :destroy, :update]
 
@@ -16,11 +17,22 @@ class CommentsController < ApplicationController
 
   def create
     params[:user_id] = @current_user.id
-    params[:replied_on_comment_id] = params[:comment_id] unless params[:comment_id].nil?
+    params[:replied_on_comment_id] = params[:comment_id] unless params[:comment_id]
 
-    @comment = @blog.comments.create(comment_params)
+    @comment = @blog.comments.build(comment_params)
 
-    redirect_to @blog
+    if @comment.save
+      unless params[:replied_on_comment_id]
+        notify_user("#{@current_user.username} commented on your post (#{@blog.title}).", @blog.id, "Blog", @blog.user_id)
+        redirect_to @blog
+      else
+        parent_comment = Comment.includes(:user).find(params[:replied_on_comment_id])
+        notify_user("#{@current_user.username} replied on your comment.", parent_comment.id, "Comment", parent_comment.user.id)
+        redirect_to comment_path(parent_comment.id)
+      end
+    else
+      render json: @comment.errors, status: 422
+    end
   end
 
   def update

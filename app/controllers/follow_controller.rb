@@ -1,4 +1,5 @@
 class FollowController < ApplicationController
+  include NotifyUser
   before_action :set_user
 
   def followers
@@ -14,6 +15,7 @@ class FollowController < ApplicationController
   def create
     follow = @user.followers.build(follower_user_id: @current_user.id)
     if follow.save
+      notify_user("#{@current_user.username} started following you.", @current_user.id, "Profile", @user.id)
       redirect_to profile_path(@user.username)
     else
       render json: follow.errors, status: :forbidden

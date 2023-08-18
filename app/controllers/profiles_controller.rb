@@ -1,6 +1,4 @@
 class ProfilesController < ApplicationController
-  include ProfileParams
-
   def index
     render json: Profile.all
   end

@@ -18,11 +18,11 @@ class UsersController < ApplicationController
   end
 
   def update
-    unless @current_user.update(user_params)
+    if @current_user.update(user_params)
+      redirect_to user_path
+    else
       render json: @current_user.errors, status: 422
     end
-
-    redirect_to user_path
   end
 
   def destroy

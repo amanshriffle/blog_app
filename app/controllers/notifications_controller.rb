@@ -9,7 +9,7 @@ class NotificationsController < ApplicationController
     refer_to = @notification.refer_to
 
     if @notification.refer_to_type == "User"
-      redirect_to profile_path(refer_to.username)
+      redirect_to user_path(refer_to.username)
     else
       redirect_to refer_to
     end

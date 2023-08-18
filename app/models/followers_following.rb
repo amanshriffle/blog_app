@@ -6,7 +6,7 @@ class FollowersFollowing < ApplicationRecord
 
   validate :following_self?, :already_following_user?
 
-  after_create :notify_user
+  # after_create :notify_user
 
   private
 
@@ -22,12 +22,12 @@ class FollowersFollowing < ApplicationRecord
     end
   end
 
-  def notify_user
-    Notification.create(
-      notification_text: "#{User.find(follower_user_id).username} started following you.",
-      refer_to_id: follower_user_id,
-      refer_to_type: "User",
-      user_id: user_id,
-    )
-  end
+  # def notify_user
+  #   Notification.create(
+  #     notification_text: "#{User.find(follower_user_id).username} started following you.",
+  #     refer_to_id: follower_user_id,
+  #     refer_to_type: "User",
+  #     user_id: user_id,
+  #   )
+  # end
 end
