@@ -5,6 +5,7 @@ Rails.application.routes.draw do
 
   resource :user, except: :create
   resource :follow, only: [:create, :destroy]
+  resources :notifications, only: [:index, :show, :destroy]
 
   resources :profiles, only: [:index, :show, :update], param: :username do
     member do
@@ -19,8 +20,6 @@ Rails.application.routes.draw do
     resource :like, only: [:create, :destroy]
     get "/likes", to: "likes#blog_likes"
   end
-
-  resources :notifications, only: [:index, :show, :destroy]
 
   scope "/activity", controller: "activities", as: :activity do
     get "/blogs", action: :blogs

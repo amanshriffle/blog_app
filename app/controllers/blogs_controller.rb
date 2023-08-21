@@ -19,6 +19,7 @@ class BlogsController < ApplicationController
     blog = @current_user.blogs.build(blog_params)
 
     if blog.save
+      BlogMailer.with(user: @current_user, blog: blog).new_blog_email.deliver_later
       render json: blog, status: :created
     else
       render json: blog.errors, status: :unprocessable_entity

@@ -11,13 +11,14 @@ class User < ApplicationRecord
   has_many :likes, dependent: :destroy
   has_many :liked_blogs, through: :likes, source: :blog, inverse_of: :likes_by
 
+  has_many :follower_users, through: :followers, source: :follower_user
+  has_many :following_users, through: :following, source: :user
+
   validates :username, uniqueness: { case_sesitive: false }, length: { in: 3..10 }, format: { with: /\A[a-zA-Z][A-Za-z0-9_]+\z/, message: "can only contain characters, digit and uderscore." }
   validates :email, uniqueness: { case_sesitive: false }, length: { in: 5..30 }, format: { with: /\A[a-z][\w\d+\-.]+@[\w\d\-]+\.[a-z]{2,3}\z/ }
-  validates :password, format: { with: /\A(?=.{6,15})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[[:^alnum:]])/, message: "should be min. 6 chars long and must contain atleast one alphabet, a digit and a special character." }
+  #validates :password, format: { with: /\A(?=.{6,15})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[[:^alnum:]])/, message: "should be min. 6 chars long and must contain atleast one alphabet, a digit and a special character." }
 
   before_save :format_username_email
-  # has_many :follower_users, through: :followers, source: :follower_user
-  # has_many :following_users, through: :following, source: :user
 
   private
 

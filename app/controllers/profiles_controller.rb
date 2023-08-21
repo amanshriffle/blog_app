@@ -10,7 +10,8 @@ class ProfilesController < ApplicationController
     user = User.includes(:followers, :following, :blogs, :profile).find_by_username!(params[:username])
     user_profile = user.profile
 
-    render json: [user_profile, { Blogs: user.blogs.size, Followers: user.followers.size, Following: user.following.size }]
+    render json: user_profile
+    #render json: [user_profile, { Blogs: user.blogs.size, Followers: user.followers.size, Following: user.following.size }]
   end
 
   def update
@@ -28,6 +29,8 @@ class ProfilesController < ApplicationController
 
   def list_followers
     followers = @user.followers.joins(:follower_user).select(:id, :follower_user_id, "users.username")
+    #followers = @user.followers.to_json(only: [:id, :follower_user_id], include: { follower_user: { only: :username } })
+
     render json: followers
   end
 
