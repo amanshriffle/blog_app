@@ -1,57 +1,48 @@
-# 10.times do |i|
-#   User.create(username: "user#{i}", first_name: "fname", last_name: "lname", email: "email#{i}@gmail.com")
-# end
+#User
+3.times do |i|
+  i += 1
+  User.create(username: "user#{i}", email: "user#{i}@email.com", password: "User@#{i}")
+end
 
-# 11.times do |i|
-#   i = i + 4
-#   5.times do |j|
-#     Blog.create(title: "Hello Blog#{j} of user#{i}", body: "Welcome to blog#{j} of user#{i}", visible: true, user_id: i)
-#   end
-# end
+#Profile
+User.all.each_with_index do |u, i|
+  u.create_profile(first_name: "fname", last_name: "lname", date_of_birth: Date.today - (18 + i + 2).year - (i + 5).month, about: "Interested in ROR")
+end
 
-# 10.times do |u|
-#   u = u + 4
-#   50.times do |i|
-#     i = i + 1
-#     Like.create(blog_id: i, user_id: u)
-#   end
-# end
+#Followers_Following
+User.all.each do |u1|
+  User.all.each do |u2|
+    u1.followers.create(follower_user_id: u2.id)
+  end
+end
 
-# 50.times do |b|
-#   b = b + 1
-#   10.times do |u|
-#     u = u + 4
-#     Comment.create(comment: "Comment of user #{u} on blog #{b}", blog_id: b, user_id: u)
-#   end
-# end
+#Blog
+User.all.each do |u, i|
+  2.times do |bn|
+    bn += 1
+    u.blogs.create({ title: "Blog no. #{bn} of #{u.username}", body: "Welcome to blog#{bn} of #{u.username}", visible: true })
+  end
+end
 
-# ua = User.all
-# ba = Blog.all
+#Comment
+Blog.all.each do |b|
+  User.all.each do |u|
+    b.comments.create(comment_text: "Comment by #{u.username}", user_id: u.id)
+  end
+end
 
-# ba.each do |b|
-#   ca = b.comments
-#   ca.each do |c|
-#     ua.each do |u|
-#       Comment.create(comment: "Replied on comment #{c.id}", blog_id: b.id, user_id: u.id, replied_on: c.id)
-#     end
-#   end
-# end
+#Replies on comment
+Blog.all.each do |b|
+  b.comments.each do |c|
+    User.all.each do |u|
+      c.replies.create(comment_text: "Replied on comment#{c.id} by #{u.username}", blog_id: b.id, user_id: u.id)
+    end
+  end
+end
 
-# ua = User.all
-
-# ua.each do |u|
-#   uf = User.all
-#   uf.each do |f|
-#     u.following.create(user_id: f.id)
-#   end
-# end
-
-users = User.all
-
-# users.each_with_index do |user, i|
-#   user.update(password: "user@#{user.id}")
-# end
-
-users.each_with_index do |u, i|
-  u.create_profile(first_name: "fname", last_name: "lname", date_of_birth: (Date.today - 18.years - i.month - i.year), about: "fname lname is a technology enthusiast with interest in Ruby on Rails")
+#Like
+Blog.all.each do |b|
+  User.all.each do |u|
+    b.likes.create(user_id: u.id)
+  end
 end

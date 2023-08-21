@@ -1,29 +1,30 @@
 Rails.application.routes.draw do
   root "blogs#index"
   post "/login", to: "authentication#login"
-  post "/signup", to: "users#sign_up"
+  post "/signup", to: "users#create"
 
   resource :user, except: :create
+  resource :follow, only: [:create, :destroy]
 
-  scope ":username" do
-    get "/profile", to: "profiles#show"
-    get "/followers", to: "follow#followers"
-    get "/following", to: "follow#following"
-    get "/follow", to: "follow#create"
-    get "/unfollow", to: "follow#destroy"
-  end
-
-  get "/profiles", to: "profiles#index"
-  match "/profile", to: "profiles#update", via: [:patch, :put]
-
-  resources :blogs do
-    resources :comments, shallow: true
+  resources :profiles, only: [:index, :show, :update], param: :username do
     member do
-      get "/like", action: :like
-      get "/unlike", action: :unlike
-      get "/likes", action: :likes
+      get "/blogs", to: "blogs#user_blogs", as: :user_blogs
+      get "/followers", action: "list_followers"
+      get "/following", action: "list_following"
     end
   end
 
+  resources :blogs do
+    resources :comments, shallow: true
+    resource :like, only: [:create, :destroy]
+    get "/likes", to: "likes#blog_likes"
+  end
+
   resources :notifications, only: [:index, :show, :destroy]
+
+  scope "/activity", controller: "activities", as: :activity do
+    get "/blogs", action: :blogs
+    get "/likes", action: :likes
+    get "/comments", action: :comments
+  end
 end
