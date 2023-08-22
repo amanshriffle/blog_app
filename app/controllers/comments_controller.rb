@@ -5,21 +5,19 @@ class CommentsController < ApplicationController
   before_action :check_comment_author, only: [:update, :destroy]
 
   def index
-    blog = Blog.includes(:comments).where("comments.parent_comment_id" => nil).find(params[:blog_id])
+    blog = Blog.find(params[:blog_id])
     comments = blog.comments
 
-    render json: comments
+    render json: comments, adapter: nil
   end
 
   def show
-    comment = Comment.includes(:replies).find(params[:id])
-    replies = comment.replies
-
-    render json: [comment, replies]
+    comment = Comment.find(params[:id])
+    render json: comment
   end
 
   def create
-    params[:parent_comment_id] = params[:comment_id] if params[:comment_id] || params[:parent_comment_id]
+    params[:parent_comment_id] = params[:comment_id] if params[:comment_id]
 
     @comment = @current_user.comments.build(comment_params)
 

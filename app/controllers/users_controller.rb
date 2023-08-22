@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   include ProfileParams
 
   def show
-    render json: @current_user
+    render json: @current_user, include: :profile
   end
 
   def create
@@ -41,7 +41,8 @@ class UsersController < ApplicationController
     profile = @user.build_profile(profile_params)
 
     if profile.save
-      render json: [@user, profile], status: :created
+      UserMailer.with(user: @user, profile: profile).welcome_email.deliver_later
+      render json: profile, status: :created
     else
       @user.delete
       render json: profile.errors, status: 422

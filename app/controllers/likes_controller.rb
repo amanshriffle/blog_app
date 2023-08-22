@@ -2,10 +2,6 @@ class LikesController < ApplicationController
   before_action :set_blog
   include NotifyUser
 
-  def blog_likes
-    render json: @blog.likes_by
-  end
-
   def create
     like = @blog.likes.build(user_id: @current_user.id)
 

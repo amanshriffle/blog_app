@@ -1,4 +1,5 @@
 class FollowsController < ApplicationController
+  before_action :set_user, only: [:list_followers, :list_following]
   include NotifyUser
 
   def create
@@ -20,6 +21,24 @@ class FollowsController < ApplicationController
       render json: follow
     else
       render json: [error: "Unauthorized"], status: :unauthorized
+    end
+  end
+
+  def list_followers
+    render json: @user.followers, each_serializer: FollowSerializer, include: :follower_user
+  end
+
+  def list_following
+    render json: @user.following, each_serializer: FollowSerializer, include: :user
+  end
+
+  private
+
+  def set_user
+    if params[:username] == @current_user.username
+      @user = @current_user
+    else
+      @user = User.find_by_username!(params[:username])
     end
   end
 end

@@ -1,24 +1,18 @@
 class ProfilesController < ApplicationController
-  before_action :set_user, only: [:list_followers, :list_following]
   include ProfileParams
+  before_action :set_user, except: :index
+  before_action :check_logged_user, only: :update
 
   def index
     render json: Profile.all
   end
 
   def show
-    user = User.includes(:followers, :following, :blogs, :profile).find_by_username!(params[:username])
-    user_profile = user.profile
-
-    render json: user_profile
-    #render json: [user_profile, { Blogs: user.blogs.size, Followers: user.followers.size, Following: user.following.size }]
+    render json: @user, include: [:profile, :blogs, :followers, :following]
   end
 
   def update
-    user = User.includes(:profile).find_by_username!(params[:username])
-    profile = user.profile
-
-    raise ActiveRecord::ReadOnlyError unless @current_user.id == profile.user_id
+    profile = @user.profile
 
     if profile.update(profile_params)
       render json: profile
@@ -27,25 +21,13 @@ class ProfilesController < ApplicationController
     end
   end
 
-  def list_followers
-    followers = @user.followers.joins(:follower_user).select(:id, :follower_user_id, "users.username")
-    #followers = @user.followers.to_json(only: [:id, :follower_user_id], include: { follower_user: { only: :username } })
-
-    render json: followers
-  end
-
-  def list_following
-    following = @user.following.joins(:user).select(:id, :user_id, "users.username")
-    render json: following
-  end
-
   private
 
   def set_user
-    if params[:username] == @current_user.username
-      @user = @current_user
-    else
-      @user = User.find_by_username!(params[:username])
-    end
+    @user = User.find_by_username!(params[:username])
+  end
+
+  def check_logged_user
+    raise ActiveRecord::ReadOnlyError unless @current_user.id == profile.user_id
   end
 end

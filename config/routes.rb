@@ -10,15 +10,14 @@ Rails.application.routes.draw do
   resources :profiles, only: [:index, :show, :update], param: :username do
     member do
       get "/blogs", to: "blogs#user_blogs", as: :user_blogs
-      get "/followers", action: "list_followers"
-      get "/following", action: "list_following"
+      get "/followers", to: "follows#list_followers"
+      get "/following", to: "follows#list_following"
     end
   end
 
   resources :blogs do
     resources :comments, shallow: true
     resource :like, only: [:create, :destroy]
-    get "/likes", to: "likes#blog_likes"
   end
 
   scope "/activity", controller: "activities", as: :activity do

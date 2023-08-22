@@ -1,18 +1,16 @@
 class BlogsController < ApplicationController
   skip_before_action :authenticate_request, only: [:index, :show]
-  before_action :set_blog, only: [:update, :destroy]
+
+  before_action :set_blog, only: [:show, :update, :destroy]
   before_action :check_blog_author, only: [:update, :destroy]
 
   def index
     blogs = Blog.visible
-    render json: blogs
+    render json: blogs, adapter: nil
   end
 
   def show
-    blog = Blog.includes(:comments).where("comments.parent_comment_id" => nil).find(params[:id])
-    comments = blog.comments
-
-    render json: [blog, comments]
+    render json: @blog
   end
 
   def create

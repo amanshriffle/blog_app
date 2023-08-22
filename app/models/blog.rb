@@ -1,8 +1,7 @@
 class Blog < ApplicationRecord
   belongs_to :user
-  has_many :comments, -> { order created_at: :desc }, dependent: :destroy
+  has_many :comments, -> { where(parent_comment_id: nil).order created_at: :desc }, dependent: :destroy
   has_many :likes, dependent: :destroy
-  has_many :likes_by, -> { select "likes.*", :username }, through: :likes, source: :user, inverse_of: :liked_blogs
   has_many :pictures, as: :imageable, dependent: :destroy
 
   validates :title, uniqueness: { case_sesitive: false }, length: { in: 5..150 }
