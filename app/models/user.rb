@@ -9,7 +9,7 @@ class User < ApplicationRecord
   has_many :following, -> { select :id, :user_id }, class_name: "FollowersFollowing", foreign_key: :follower_user_id, dependent: :destroy, inverse_of: :follower_user
   has_many :comments, dependent: :destroy
   has_many :likes, dependent: :destroy
-  has_many :liked_blogs, through: :likes, source: :blog, inverse_of: :likes_by
+  has_many :liked_blogs, through: :likes, source: :blog
 
   has_many :follower_users, through: :followers, source: :follower_user
 

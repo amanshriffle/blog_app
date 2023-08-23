@@ -1,8 +1,6 @@
 class CommentSerializer < ActiveModel::Serializer
-  attributes :id, :comment_text, :user_id, :username, :created_at
-  has_many :replies
+  attributes :id, :comment_text, :blog_id, :created_at
 
-  def username
-    self.object.user.username
-  end
+  belongs_to :user
+  has_many :replies
 end

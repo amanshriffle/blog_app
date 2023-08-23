@@ -1,12 +1,13 @@
 class BlogsController < ApplicationController
   skip_before_action :authenticate_request, only: [:index, :show]
+  skip_around_action :check_profile, only: [:index, :show]
 
   before_action :set_blog, only: [:show, :update, :destroy]
   before_action :check_blog_author, only: [:update, :destroy]
 
   def index
     blogs = Blog.visible
-    render json: blogs, adapter: nil
+    render json: blogs, include: :user
   end
 
   def show
@@ -34,14 +35,15 @@ class BlogsController < ApplicationController
 
   def destroy
     @blog.destroy
-    redirect_to activity_blogs_path
+
+    render json: @blog, status: :see_other
   end
 
   def user_blogs
     user = User.find_by_username!(params[:username])
 
-    render json: user.blogs if user.id == @current_user.id
-    render json: user.blogs.visible
+    render json: user.blogs, adapter: nil if user.id == @current_user.id
+    render json: user.blogs.visible, adapter: nil
   end
 
   private

@@ -1,6 +1,6 @@
 class ProfilesController < ApplicationController
-  include ProfileParams
-  before_action :set_user, except: :index
+  skip_around_action :check_profile, only: :update
+  before_action :set_profile, except: :index
   before_action :check_logged_user, only: :update
 
   def index
@@ -8,26 +8,28 @@ class ProfilesController < ApplicationController
   end
 
   def show
-    render json: @user, include: [:profile, :blogs, :followers, :following]
+    render json: @profile, include: { user: [:blogs, :followers, :following] }
   end
 
   def update
-    profile = @user.profile
-
-    if profile.update(profile_params)
-      render json: profile
+    if @profile.update(profile_params)
+      render json: @profile
     else
-      render json: profile.errors, status: 422
+      render json: @profile.errors, status: 422
     end
   end
 
   private
 
-  def set_user
-    @user = User.find_by_username!(params[:username])
+  def profile_params
+    params.permit(:first_name, :last_name, :date_of_birth, :about)
+  end
+
+  def set_profile
+    @profile = Profile.joins(:user).find_by!('users.username': params[:username])
   end
 
   def check_logged_user
-    raise ActiveRecord::ReadOnlyError unless @current_user.id == profile.user_id
+    raise ActiveRecord::ReadOnlyError unless @current_user.id == @profile.user_id
   end
 end

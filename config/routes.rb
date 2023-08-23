@@ -5,7 +5,7 @@ Rails.application.routes.draw do
 
   resource :user, except: :create
   resource :follow, only: [:create, :destroy]
-  resources :notifications, only: [:index, :show, :destroy]
+  resources :notifications, only: [:index, :destroy]
 
   resources :profiles, only: [:index, :show, :update], param: :username do
     member do

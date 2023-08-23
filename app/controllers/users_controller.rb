@@ -1,7 +1,6 @@
 class UsersController < ApplicationController
   skip_before_action :authenticate_request, only: :create
-
-  include ProfileParams
+  skip_around_action :check_profile, only: [:create, :destroy]
 
   def show
     render json: @current_user, include: :profile
@@ -11,7 +10,9 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
-      create_profile
+      profile = @user.build_profile.save(validate: false)
+      UserMailer.with(user: @user).welcome_email.deliver_later
+      render json: @user, include: :profile, status: :created
     else
       render json: [@user.errors], status: 422
     end
@@ -35,17 +36,5 @@ class UsersController < ApplicationController
 
   def user_params
     params.permit(:username, :email, :password)
-  end
-
-  def create_profile
-    profile = @user.build_profile(profile_params)
-
-    if profile.save
-      UserMailer.with(user: @user, profile: profile).welcome_email.deliver_later
-      render json: profile, status: :created
-    else
-      @user.delete
-      render json: profile.errors, status: 422
-    end
   end
 end

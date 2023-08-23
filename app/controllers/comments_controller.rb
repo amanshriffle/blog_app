@@ -8,7 +8,7 @@ class CommentsController < ApplicationController
     blog = Blog.find(params[:blog_id])
     comments = blog.comments
 
-    render json: comments, adapter: nil
+    render json: comments, include: :user
   end
 
   def show
@@ -17,13 +17,10 @@ class CommentsController < ApplicationController
   end
 
   def create
-    params[:parent_comment_id] = params[:comment_id] if params[:comment_id]
-
     @comment = @current_user.comments.build(comment_params)
 
     if @comment.save
       generate_notification
-
       render json: @comment, status: :created
     else
       render json: @comment.errors, status: 422
