@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   skip_before_action :authenticate_request, only: :create
-  skip_around_action :check_profile, only: [:create, :destroy]
+  skip_around_action :check_profile
 
   def show
     render json: @current_user, include: :profile
