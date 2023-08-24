@@ -3,6 +3,6 @@ class BlogMailer < ApplicationMailer
     @user = params[:user]
     @blog = params[:blog]
 
-    mail(bcc: @user.follower_users.pluck(:email), subject: "New blog posted by #{@user.username}.")
+    mail(bcc: @user.follower_users.pluck(:email), subject: "New Blog Posted by #{@user.username}.")
   end
 end

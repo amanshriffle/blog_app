@@ -4,7 +4,7 @@
   </head>
   <body>
 
-    <h1><%= @user.username %> posted a blog. (<%= @blog.title %>)</h1>
+    <h3><%= @user.username %> posted a blog. (<%= @blog.title[0..20] %>)...</h3>
     <p>
         Please follow the link for blog- http://127.0.0.1:3000/blogs/<%= @blog.id %>
     </p>

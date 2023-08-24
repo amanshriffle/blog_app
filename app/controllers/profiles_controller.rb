@@ -12,6 +12,8 @@ class ProfilesController < ApplicationController
   end
 
   def update
+    @profile.profile_picture.attach(params[:profile_picture]) unless params[:profile_picture]
+
     if @profile.update(profile_params)
       render json: @profile
     else
@@ -22,7 +24,7 @@ class ProfilesController < ApplicationController
   private
 
   def profile_params
-    params.permit(:first_name, :last_name, :date_of_birth, :about)
+    params.permit(:first_name, :last_name, :date_of_birth, :about, :profile_picture)
   end
 
   def set_profile
