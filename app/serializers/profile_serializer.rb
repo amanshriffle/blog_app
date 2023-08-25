@@ -8,7 +8,7 @@ class ProfileSerializer < ActiveModel::Serializer
     profile_picture = object.profile_picture
 
     if profile_picture.attached?
-      "http://127.0.0.1" + rails_blob_path(object.profile_picture, host: "localhost:3000")
+      "http://127.0.0.1:3000" + rails_blob_path(profile_picture, host: "localhost:3000")
     else
       return nil
     end

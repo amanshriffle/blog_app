@@ -13,4 +13,10 @@ class ActivitiesController < ApplicationController
     comments = @current_user.comments
     render json: comments, include: :user
   end
+
+  def drafts
+    blogs = @current_user.blogs.not_visible
+
+    render json: blogs
+  end
 end

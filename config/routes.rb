@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   resources :notifications, only: [:index, :destroy]
 
   resources :profiles, only: [:index, :show, :update], param: :username do
+    post "/search", action: "search", on: :collection
     member do
       get "/blogs", to: "blogs#user_blogs", as: :user_blogs
       get "/followers", to: "follows#list_followers"
@@ -18,9 +19,11 @@ Rails.application.routes.draw do
   resources :blogs do
     resources :comments, shallow: true
     resource :like, only: [:create, :destroy]
+    post "/search", action: "search", on: :collection
   end
 
   scope "/activity", controller: "activities", as: :activity do
+    get "/drafts", action: :drafts
     get "/blogs", action: :blogs
     get "/likes", action: :likes
     get "/comments", action: :comments

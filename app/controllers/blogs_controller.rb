@@ -46,6 +46,13 @@ class BlogsController < ApplicationController
     render json: user.blogs.visible, adapter: nil
   end
 
+  def search
+    key = "%#{params[:key]}%"
+    blogs = Blog.where("title LIKE :key OR body LIKE :key", { key: key })
+
+    render json: blogs
+  end
+
   private
 
   def set_blog
