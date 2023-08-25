@@ -15,13 +15,10 @@ class BlogsController < ApplicationController
   end
 
   def create
-    debugger
     blog = @current_user.blogs.build(blog_params)
 
     if blog.save
-      @current_user.follower_users.each do |fu|
-        BlogMailer.with(user: @current_user, blog: blog, follower_user: fu).new_blog_email.deliver_later
-      end
+      SendEmailToFollowerUsersJob.perform_later(@current_user, blog)
       render json: blog, status: :created
     else
       render json: blog.errors, status: :unprocessable_entity

@@ -9,6 +9,9 @@ gem "rails", "~> 7.0.6"
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
 
+#queuing library for active job
+gem "sidekiq"
+
 #Stores the session data in a database using Active Record
 gem "activerecord-session_store"
 
