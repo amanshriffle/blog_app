@@ -3,13 +3,15 @@ class AuthenticationController < ApplicationController
   skip_around_action :check_profile
 
   def login
-    @user = User.find_by_username(params[:username]) || User.find_by_email(params[:username])
+    user = User.where(username: params[:username]).or(User.where(email: params[:username])).first
 
-    if @user&.authenticate(params[:password])
-      token = jwt_encode(user_id: @user.id)
+    return render json: { error: "User doesn't exist, please register first" }, status: :unauthorized unless user
+
+    if user.authenticate(params[:password])
+      token = jwt_encode(user_id: user.id)
       render json: { token: token }, status: :ok
     else
-      render json: { error: "Unauthorized" }, status: :unauthorized
+      render json: { error: "Password is invalid" }, status: :unauthorized
     end
   end
 end

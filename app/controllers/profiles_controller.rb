@@ -1,5 +1,5 @@
 class ProfilesController < ApplicationController
-  skip_around_action :check_profile, only: :update
+  skip_around_action :check_profile, only: [:show, :update]
   before_action :set_profile, except: [:index, :search]
   before_action :check_logged_user, only: :update
 
@@ -12,8 +12,6 @@ class ProfilesController < ApplicationController
   end
 
   def update
-    @profile.profile_picture.attach(params[:profile_picture]) unless params[:profile_picture]
-
     if @profile.update(profile_params)
       render json: @profile
     else

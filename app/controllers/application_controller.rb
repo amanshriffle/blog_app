@@ -8,10 +8,14 @@ class ApplicationController < ActionController::API
 
   def authenticate_request
     header = request.headers["Authorization"]
-    header = header.split(" ").last if header
-    decoded = jwt_decode(header)
 
-    @current_user = User.includes(:profile).find(decoded[:user_id])
+    if header
+      header = header.split(" ").last
+      decoded = jwt_decode(header)
+      @current_user = User.find(decoded[:user_id])
+    else
+      render json: { error: "Authorization failed, please use valid JWT." }, status: :unauthorized
+    end
   end
 
   def check_profile

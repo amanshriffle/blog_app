@@ -1,6 +1,6 @@
 class CommentsController < ApplicationController
   include NotifyUser
-
+  skip_around_action :check_profile, except: :create
   before_action :set_comment, only: [:destroy, :update]
   before_action :check_comment_author, only: [:update, :destroy]
 

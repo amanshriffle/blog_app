@@ -1,6 +1,6 @@
 class BlogsController < ApplicationController
   skip_before_action :authenticate_request, only: [:index, :show]
-  skip_around_action :check_profile, only: [:index, :show]
+  skip_around_action :check_profile, except: :create
 
   before_action :set_blog, only: [:show, :update, :destroy]
   before_action :check_blog_author, only: [:update, :destroy]

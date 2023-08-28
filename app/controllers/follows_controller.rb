@@ -1,4 +1,5 @@
 class FollowsController < ApplicationController
+  skip_around_action :check_profile, except: :create
   before_action :set_user, only: [:list_followers, :list_following]
   include NotifyUser
 

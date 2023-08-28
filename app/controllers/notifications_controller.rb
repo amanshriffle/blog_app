@@ -1,5 +1,5 @@
 class NotificationsController < ApplicationController
-  #before_action :set_notifications
+  skip_around_action :check_profile
 
   def index
     render json: @current_user.notifications
