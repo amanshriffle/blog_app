@@ -18,7 +18,6 @@ class BlogsController < ApplicationController
     blog = @current_user.blogs.build(blog_params)
 
     if blog.save
-      SendEmailToFollowerUsersJob.perform_later(@current_user, blog)
       render json: blog, status: :created, adapter: nil
     else
       render json: blog.errors, status: :unprocessable_entity

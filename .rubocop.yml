@@ -1,0 +1,10 @@
+require: rubocop-rails
+
+#Cop files_to_ignore
+AllCops:
+  Exclude:
+    - Gemfile
+    - Rakefile
+    - 'temp/**/*'
+    - 'vendor/**/*'
+    - '.git/**/*'

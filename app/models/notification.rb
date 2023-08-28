@@ -12,7 +12,7 @@ class Notification < ApplicationRecord
     find_not = Notification.where(notification_text: notification_text)
 
     unless find_not.empty?
-      find_not.destroy_all
+      find_not.delete_all
     end
   end
 end
