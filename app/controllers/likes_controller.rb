@@ -3,18 +3,18 @@ class LikesController < ApplicationController
   before_action :set_blog
 
   def create
-    like = @blog.likes.build(user_id: @current_user.id)
+    like = @blog.likes.build(user_id: current_user.id)
 
     if like.save
-      notify_user("#{@current_user.username} liked on your post (#{@blog.title}).", like.blog_id, "Blog", @blog.user_id)
+      notify_user("#{current_user.username} liked on your post (#{@blog.title}).", like.blog_id, "Blog", @blog.user_id)
       render json: @blog, status: :created
     else
-      render json: like.errors, status: 422
+      render json: like.errors, status: :unprocessable_entity
     end
   end
 
   def destroy
-    like = @blog.likes.find_by_user_id! @current_user.id
+    like = @blog.likes.find_by!(user_id: current_user.id)
     authorize! :destroy, like
     like.destroy
 

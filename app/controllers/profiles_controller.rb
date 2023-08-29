@@ -1,13 +1,13 @@
 class ProfilesController < ApplicationController
-  skip_around_action :check_profile, only: [:show, :update]
-  before_action :set_profile, except: [:index, :search]
+  skip_around_action :check_profile, only: %i[show update]
+  before_action :set_profile, except: %i[index search]
 
   def index
     render json: Profile.all
   end
 
   def show
-    render json: @profile, include: { user: [:blogs, :followers, :following] }
+    render json: @profile, include: { user: %i[blogs followers following] }
   end
 
   def update
@@ -16,13 +16,13 @@ class ProfilesController < ApplicationController
     if @profile.update(profile_params)
       render json: @profile
     else
-      render json: @profile.errors, status: 422
+      render json: @profile.errors, status: :unprocessable_entity
     end
   end
 
   def search
     key = "%#{params[:key]}%"
-    users = Profile.joins(:user).where("users.username LIKE :key OR first_name LIKE :key OR last_name LIKE :key", { key: key })
+    users = Profile.joins(:user).where("users.username LIKE :key OR first_name LIKE :key OR last_name LIKE :key", { key: })
 
     render json: users
   end

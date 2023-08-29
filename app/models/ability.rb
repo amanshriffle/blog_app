@@ -8,14 +8,14 @@ class Ability
     can :read, Blog, visible: true
     can :read, Comment
 
-    return unless user.present?
+    return if user.blank?
 
     can :read, Profile
-    can :update, Profile, user: user
-    can :read, Blog, visible: false, user: user
-    can [:update, :destroy], Blog, user: user
-    can [:update, :destroy], Comment, user: user
-    can :destroy, Like, user: user
+    can :update, Profile, { user: }
+    can :read, Blog, { visible: false, user: }
+    can %i[update destroy], Blog, { user: }
+    can %i[update destroy], Comment, { user: }
+    can :destroy, Like, { user: }
     can :destroy, FollowersFollowing, user_id: user.id
     can :destroy, FollowersFollowing, follower_user_id: user.id
   end

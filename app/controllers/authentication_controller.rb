@@ -2,6 +2,11 @@ class AuthenticationController < ApplicationController
   skip_before_action :authenticate_request
   skip_around_action :check_profile
 
+  def new
+    @user = User.new
+    render "login"
+  end
+
   def login
     user = User.where(username: params[:username]).or(User.where(email: params[:username])).first
 
@@ -9,7 +14,7 @@ class AuthenticationController < ApplicationController
 
     if user.authenticate(params[:password])
       token = jwt_encode(user_id: user.id)
-      render json: { token: token }, status: :ok
+      render json: { token: }, status: :ok
     else
       render json: { error: "Password is invalid" }, status: :unauthorized
     end

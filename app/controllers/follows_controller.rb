@@ -1,13 +1,13 @@
 class FollowsController < ApplicationController
   skip_around_action :check_profile, except: :create
-  before_action :set_user, only: [:list_followers, :list_following]
+  before_action :set_user, only: %i[list_followers list_following]
   include NotifyUser
 
   def create
-    follow = @current_user.following.build(user_id: params[:user_id])
+    follow = current_user.following.build(user_id: params[:user_id])
 
     if follow.save
-      notify_user("#{@current_user.username} started following you.", @current_user.id, "User", params[:user_id])
+      notify_user("#{current_user.username} started following you.", current_user.id, "User", params[:user_id])
       render json: follow, status: :created
     else
       render json: follow.errors, status: :forbidden
@@ -33,10 +33,12 @@ class FollowsController < ApplicationController
   private
 
   def set_user
-    if params[:username] == @current_user.username
-      @user = @current_user
+    check_param = params[:username] == current_user.username
+
+    if check_param
+      @user = current_user
     else
-      @user = User.find_by_username!(params[:username])
+      @user = User.find_by!(username: params[:username])
     end
   end
 end

@@ -15,13 +15,13 @@ class CommentsController < ApplicationController
   end
 
   def create
-    @comment = @current_user.comments.build(comment_params)
+    @comment = current_user.comments.build(comment_params)
 
     if @comment.save
       generate_notification
       render json: @comment, status: :created
     else
-      render json: @comment.errors, status: 422
+      render json: @comment.errors, status: :unprocessable_entity
     end
   end
 
@@ -48,10 +48,10 @@ class CommentsController < ApplicationController
   def generate_notification
     if @comment.parent_comment_id
       parent_comment = @comment.parent_comment
-      notify_user("#{@current_user.username} replied on your comment.", parent_comment.id, "Comment", parent_comment.user_id)
+      notify_user("#{current_user.username} replied on your comment.", parent_comment.id, "Comment", parent_comment.user_id)
     else
       blog = @comment.blog
-      notify_user("#{@current_user.username} commented on your post (#{blog.title}).", blog.id, "Blog", blog.user_id)
+      notify_user("#{current_user.username} commented on your post (#{blog.title}).", blog.id, "Blog", blog.user_id)
     end
   end
 end
