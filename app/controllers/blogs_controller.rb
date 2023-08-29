@@ -2,8 +2,7 @@ class BlogsController < ApplicationController
   skip_before_action :authenticate_request, only: [:index, :show]
   skip_around_action :check_profile, except: :create
 
-  before_action :set_blog, only: [:show, :update, :destroy]
-  before_action :check_blog_author, only: [:update, :destroy]
+  load_and_authorize_resource
 
   def index
     blogs = Blog.visible
@@ -54,17 +53,7 @@ class BlogsController < ApplicationController
 
   private
 
-  def set_blog
-    @blog = Blog.find(params[:id])
-  end
-
   def blog_params
     params.permit(:title, :body, :visible)
-  end
-
-  def check_blog_author
-    unless @blog.user_id == @current_user.id
-      raise ActiveRecord::ReadOnlyError, "Only author can edit or delete the blog."
-    end
   end
 end

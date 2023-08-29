@@ -15,6 +15,7 @@ class LikesController < ApplicationController
 
   def destroy
     like = @blog.likes.find_by_user_id! @current_user.id
+    authorize! :destroy, like
     like.destroy
 
     render json: @blog

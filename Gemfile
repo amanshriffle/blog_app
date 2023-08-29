@@ -3,6 +3,9 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "3.2.2"
 
+#For authorization
+gem "cancancan"
+
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.0.6"
 
@@ -10,7 +13,7 @@ gem "rails", "~> 7.0.6"
 gem "sprockets-rails"
 
 #queuing library for active job
-gem "sidekiq"
+#gem "sidekiq"
 
 #Stores the session data in a database using Active Record
 gem "activerecord-session_store"

@@ -23,6 +23,6 @@ class Blog < ApplicationRecord
   end
 
   def notify_user
-    CreateNotificationJob.perform_later(self)
+    CreateNotificationAndSendMailJob.perform_later(self)
   end
 end

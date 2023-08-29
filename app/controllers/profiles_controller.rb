@@ -1,7 +1,6 @@
 class ProfilesController < ApplicationController
   skip_around_action :check_profile, only: [:show, :update]
   before_action :set_profile, except: [:index, :search]
-  before_action :check_logged_user, only: :update
 
   def index
     render json: Profile.all
@@ -12,6 +11,8 @@ class ProfilesController < ApplicationController
   end
 
   def update
+    authorize! :update, @profile
+
     if @profile.update(profile_params)
       render json: @profile
     else
@@ -34,9 +35,5 @@ class ProfilesController < ApplicationController
 
   def set_profile
     @profile = Profile.joins(:user).find_by!('users.username': params[:username])
-  end
-
-  def check_logged_user
-    raise ActiveRecord::ReadOnlyError unless @current_user.id == @profile.user_id
   end
 end

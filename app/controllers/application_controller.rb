@@ -3,12 +3,12 @@ class ApplicationController < ActionController::API
 
   before_action :authenticate_request
   around_action :check_profile
+  rescue_from CanCan::AccessDenied, with: :handle_access_denied
 
   private
 
   def authenticate_request
     header = request.headers["Authorization"]
-
     if header
       header = header.split(" ").last
       decoded = jwt_decode(header)
@@ -26,5 +26,13 @@ class ApplicationController < ActionController::API
     else
       yield
     end
+  end
+
+  def current_user
+    @current_user
+  end
+
+  def handle_access_denied
+    render json: { error: "User is not authorized to perform this action" }, status: :unauthorized
   end
 end

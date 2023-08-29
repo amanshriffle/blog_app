@@ -16,13 +16,10 @@ class FollowsController < ApplicationController
 
   def destroy
     follow = FollowersFollowing.find(params[:id])
+    authorize! :destroy, follow
 
-    if @current_user.id == follow.user_id || @current_user.id == follow.follower_user_id
-      follow.destroy
-      render json: follow
-    else
-      render json: [error: "Unauthorized"], status: :unauthorized
-    end
+    follow.destroy
+    render json: follow
   end
 
   def list_followers

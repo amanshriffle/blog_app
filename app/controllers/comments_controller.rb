@@ -1,8 +1,7 @@
 class CommentsController < ApplicationController
-  include NotifyUser
   skip_around_action :check_profile, except: :create
-  before_action :set_comment, only: [:destroy, :update]
-  before_action :check_comment_author, only: [:update, :destroy]
+  load_and_authorize_resource
+  include NotifyUser
 
   def index
     blog = Blog.find(params[:blog_id])
@@ -12,8 +11,7 @@ class CommentsController < ApplicationController
   end
 
   def show
-    comment = Comment.find(params[:id])
-    render json: comment
+    render json: @comment
   end
 
   def create
@@ -43,18 +41,8 @@ class CommentsController < ApplicationController
 
   private
 
-  def set_comment
-    @comment = Comment.find(params[:id])
-  end
-
   def comment_params
     params.permit(:comment_text, :parent_comment_id, :blog_id)
-  end
-
-  def check_comment_author
-    unless @comment.user_id == @current_user.id
-      raise ActiveRecord::ReadOnlyError, "Only author can edit or delete the comment."
-    end
   end
 
   def generate_notification
