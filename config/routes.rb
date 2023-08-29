@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
   root "blogs#index"
-  post "/login", to: "authentication#login"
   post "/signup", to: "users#create"
+  get "/login", to: "authentication#new"
+  post "/login", to: "authentication#login"
+  get "/logout", to: "authentication#logout"
 
   resource :user, except: :create
   resource :follow, only: [:create, :destroy]

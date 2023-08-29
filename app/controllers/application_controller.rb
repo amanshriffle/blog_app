@@ -1,4 +1,4 @@
-class ApplicationController < ActionController::API
+class ApplicationController < ActionController::Base
   before_action :authenticate_request
   around_action :check_profile
   rescue_from CanCan::AccessDenied, with: :handle_access_denied
@@ -9,13 +9,13 @@ class ApplicationController < ActionController::API
   private
 
   def authenticate_request
-    header = request.headers["Authorization"]
-    if header
-      header = header.split(" ").last
-      decoded = jwt_decode(header)
+    token = session[:token]
+
+    if token
+      decoded = jwt_decode(token)
       @current_user = User.find(decoded[:user_id])
     else
-      render json: { error: "Authorization failed, please use valid JWT." }, status: :unauthorized
+      render plain: "Authorization failed, please use valid JWT.", status: :unauthorized
     end
   end
 

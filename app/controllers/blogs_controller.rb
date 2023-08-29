@@ -1,25 +1,39 @@
 class BlogsController < ApplicationController
-  skip_before_action :authenticate_request, only: %i[index show]
+  #skip_before_action :authenticate_request, only: %i[index show]
   skip_around_action :check_profile, except: :create
 
   load_and_authorize_resource
 
   def index
-    blogs = Blog.visible
-    render json: blogs, include: :user
+    @blogs = Blog.visible
+
+    respond_to do |format|
+      format.html { render "index" }
+      format.json { render json: @blogs, include: :user }
+    end
   end
 
   def show
-    render json: @blog
+    @comments = @blog.comments
+    respond_to do |format|
+      format.html { render "show" }
+      format.json { render json: @blog }
+    end
+  end
+
+  def new
+    @blog = Blog.new
   end
 
   def create
-    blog = current_user.blogs.build(blog_params)
+    @blog = current_user.blogs.build(blog_params)
 
-    if blog.save
-      render json: blog, status: :created, adapter: nil
+    if @blog.save
+      redirect_to blog_path(@blog)
+      #render json: blog, status: :created, adapter: nil
     else
-      render json: blog.errors, status: :unprocessable_entity
+      redirect_to action: :new
+      #render json: blog.errors, status: :unprocessable_entity
     end
   end
 

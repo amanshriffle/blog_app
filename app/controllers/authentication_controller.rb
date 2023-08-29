@@ -10,13 +10,25 @@ class AuthenticationController < ApplicationController
   def login
     user = User.where(username: params[:username]).or(User.where(email: params[:username])).first
 
-    return render json: { error: "User doesn't exist, please register first" }, status: :unauthorized unless user
+    unless user
+      flash[:notice] = "User does not exist."
+      redirect_to action: :new
+      return
+    end
 
     if user.authenticate(params[:password])
       token = jwt_encode(user_id: user.id)
-      render json: { token: }, status: :ok
+      session[:token] = token
+      redirect_to root_path
     else
-      render json: { error: "Password is invalid" }, status: :unauthorized
+      flash[:notice] = "Password is invalid"
+      redirect_to action: :new
     end
+  end
+
+  def logout
+    session.delete(:token)
+    @_current_user = nil
+    redirect_to root_url
   end
 end

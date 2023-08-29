@@ -21,14 +21,6 @@
   </div><br>
 
   <div>
-    <%= form.label :user_id %>
-    <%= form.text_field :user_id %>
-    <% blog.errors.full_messages_for(:user_id).each do |message| %>
-      <div><%= message %></div>
-    <% end %>
-  </div><br>
-
-  <div>
     <%= form.submit %>
   </div>
 <% end %>
