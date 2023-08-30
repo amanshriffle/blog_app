@@ -1,16 +1,75 @@
-<h2><%= @blog.title %></h2>
-<p><%= @blog.body %></p>
-<span>Posted at: <%= @blog.created_at.to_s.slice(0, 19) %></span><br><br>
-<% if @current_user.id == @blog.user_id %>
-  <span><%= link_to "Edit", edit_blog_path(@blog) %></span>
-  <span><%= link_to "Destroy", blog_path(@blog), data: {
-                                                   turbo_method: :delete,
-                                                   turbo_confirm: "Are you sure?",
-                                                 } %></span><br><br>
+  <%= render "navbar" %>
 
-<% end %>
-<h3>Add a comment:</h3>
-<%= render "comments/form" %>
+  <div class="container mt-4">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title"><%= @blog.title %></h5>
+            <%= render "post_date_and_author" %>
+            <p class="card-text"><%= @blog.body %></p>
+            
+            <% if @blog.likes.find_by(user_id: @current_user.id) %>
+              <%= link_to "Like: #{@blog.likes_count}", blog_like_path(@blog.id), class: "text-dark btn btn-info", data: { turbo_method: "delete" } %>
+            <% else %>
+              <%= link_to "Like: #{@blog.likes_count}", blog_like_path(@blog.id), class: "btn btn-outline-secondary", data: { turbo_method: "post" } %>
+            <% end %>
+            
+            <%= link_to "Comment: #{@blog.comments_count}", "#list_comments", class: "btn btn-outline-secondary" %>
+            <% if @current_user.id == @blog.user_id %>
+                <a type="button" href=<%= blog_path(@blog) %> class="btn btn-danger" style="--bs-btn-padding-y: .30rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;", data-turbo-method="delete">
+                  Delete
+                </a>
+            <% end %>
+            <div class="d-flex align-items-center my-3">
+              <img src= <%= profile_picture_url(@blog) %> alt="Author Profile" width="100" height="100" class="rounded-circle me-2">
+              <h5 class="card-title">
+                <p>Writer:</p>
+                <%= link_to "#{full_name(@blog)}", profile_path(@blog.user.username), class: "link-offset-2" %>
+              </h5>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Leave a Comment</h5>
+            <%= form_with url: blog_path(@blog) + "/comments" do |form| %>
+              <div class="mb-3">
+                <%= form.label :comment, "Comment", class: "form-label" %>
+                <%= form.text_area :comment_text, class: "form-control", rows: "3", required: true %>
+              </div>
+              <button type="submit" class="btn btn-primary">Submit Comment</button>
+            <% end %>
+          </div>
+        </div>
 
-<h3>Comments:</h3>
-<%= render @comments %>
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 id="list_comments" class="card-title">Comments: </h5>
+            <% @comments.each do |comment| %>
+              <ul class="list-group">
+                <li class="list-group-item">
+                <img src= <%= profile_picture_url(comment) %> alt="Author Profile" width="50" height="50" class="rounded-circle me-2">
+                  <%= link_to "#{full_name(comment)}", profile_path(@blog.user.username), class: "text-secondary link-offset-2 link-underline link-underline-opacity-25" %>
+                  <p onclick=<%= comment_path(comment) %>> <%= comment.comment_text %> </p>
+                  <% if @current_user.id == comment.user_id %>
+                    
+                      <a type="button" href=<%= comment_path(comment) %> class="btn btn-danger mb-1" style="--bs-btn-padding-y: .30rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;", data-turbo-method="delete">
+                        Delete
+                      </a>
+                    
+                  <% end %>
+                  <p class="card-text">
+                    <small class="text-muted">
+                      posted on <%= comment.created_at.to_date.to_fs(:rfc822) %>
+                    </small>
+                  </p>
+                </li>
+            </ul>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

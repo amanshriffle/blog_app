@@ -5,7 +5,7 @@ class BlogsController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @blogs = Blog.visible
+    @blogs = Blog.includes(:user).visible
 
     respond_to do |format|
       format.html { render "index" }
@@ -14,7 +14,7 @@ class BlogsController < ApplicationController
   end
 
   def show
-    @comments = @blog.comments
+    @comments = @blog.comments.includes(user: :profile)
     respond_to do |format|
       format.html { render "show" }
       format.json { render json: @blog }
@@ -48,7 +48,7 @@ class BlogsController < ApplicationController
   def destroy
     @blog.destroy
 
-    render json: @blog, status: :see_other
+    redirect_to blogs_path
   end
 
   def user_blogs

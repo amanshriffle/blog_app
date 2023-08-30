@@ -1,11 +1,10 @@
 Rails.application.routes.draw do
-  root "blogs#index"
-  post "/signup", to: "users#create"
-  get "/login", to: "authentication#new"
-  post "/login", to: "authentication#login"
-  get "/logout", to: "authentication#logout"
+  root "authentication#show"
+  get "/signup", to: "users#new"
 
-  resource :user, except: :create
+  resource :login, controller: :authentication, path_names: { new: :login }, only: %i[show create destroy]
+
+  resource :user, except: :new
   resource :follow, only: [:create, :destroy]
   resources :notifications, only: [:index, :destroy]
 

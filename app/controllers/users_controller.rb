@@ -1,6 +1,11 @@
 class UsersController < ApplicationController
-  skip_before_action :authenticate_request, only: :create
+  skip_before_action :authenticate_request, only: %i[new create]
   skip_around_action :check_profile
+
+  def new
+    @user = User.new
+    render "signup"
+  end
 
   def show
     render json: current_user, include: :profile
@@ -12,9 +17,10 @@ class UsersController < ApplicationController
     if @user.save
       @user.build_profile.save(validate: false)
       UserMailer.with(user: @user).welcome_email.deliver_later
-      render json: @user, include: :profile, status: :created
+      flash[:notice] = "You have successfully signed up, please login"
+      redirect_to root_path
     else
-      render json: [@user.errors], status: :unprocessable_entity
+      render "signup", status: :unprocessable_entity
     end
   end
 

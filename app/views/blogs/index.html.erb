@@ -1,15 +1,26 @@
-<h1>Blogs</h1>
-
-<% flash.each do |name, msg| -%>
-  <%= content_tag :div, msg, class: name %>
-<% end %>
-
-<ul>
-  <% @blogs.each do |blog| %>
-    <li>
-      <%= link_to blog.title, blog %>
-    </li>
-  <% end %><br>
-  <%= link_to "New Blog", new_blog_path %>
-</ul>
+<%= render "navbar" %>
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-8">
+      <% @blogs.each do |blog| %>
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title"><%= blog.title %></h5>
+            <p class="card-text">
+              <small class="text-muted">
+                Posted on <%= blog.created_at.to_date %> by <%= link_to blog.user.username, profile_path(blog.user.username) %>
+              </small>
+            </p>
+            <p class="card-text"><%= blog.body[0..25]... %></p>
+            <span class="text-secondary badge">
+            <img src="https://pngimg.com/uploads/like/like_PNG89.png" height=20>
+              <p><%= blog.likes_count %> Likes</p>
+            </span><br>
+            <%= link_to "Read More", blog_path(blog), class: "btn btn-primary" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
 

@@ -1,6 +1,6 @@
 class CommentsController < ApplicationController
   skip_around_action :check_profile, except: :create
-  load_and_authorize_resource
+  load_and_authorize_resource except: :create
   include NotifyUser
 
   def index
@@ -17,12 +17,9 @@ class CommentsController < ApplicationController
   def create
     @comment = current_user.comments.build(comment_params)
 
-    if @comment.save
-      generate_notification
-      render json: @comment, status: :created
-    else
-      render json: @comment.errors, status: :unprocessable_entity
-    end
+    generate_notification if @comment.save
+
+    redirect_to blog_path(@comment.blog)
   end
 
   def update
@@ -36,7 +33,7 @@ class CommentsController < ApplicationController
   def destroy
     @comment.destroy
 
-    render json: @comment
+    redirect_to blog_path(@comment.blog)
   end
 
   private

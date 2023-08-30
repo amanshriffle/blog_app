@@ -7,9 +7,9 @@ class LikesController < ApplicationController
 
     if like.save
       notify_user("#{current_user.username} liked on your post (#{@blog.title}).", like.blog_id, "Blog", @blog.user_id)
-      render json: @blog, status: :created
+      redirect_to blog_path(@blog)
     else
-      render json: like.errors, status: :unprocessable_entity
+      redirect_to blog_path(@blog), status: :forbidden
     end
   end
 
@@ -18,7 +18,7 @@ class LikesController < ApplicationController
     authorize! :destroy, like
     like.destroy
 
-    render json: @blog
+    redirect_to blog_path(@blog)
   end
 
   private
