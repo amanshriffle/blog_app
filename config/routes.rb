@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   resource :follow, only: [:create, :destroy]
   resources :notifications, only: [:index, :destroy]
 
-  resources :profiles, only: [:index, :show, :update], param: :username do
+  resources :profiles, only: [:index, :show, :edit, :update], param: :username do
     post "/search", action: "search", on: :collection
     member do
       get "/blogs", to: "blogs#user_blogs", as: :user_blogs

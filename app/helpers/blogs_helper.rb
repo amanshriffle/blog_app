@@ -3,7 +3,7 @@ module BlogsHelper
     obj.user.profile
   end
 
-  def profile_picture_url(obj)
+  def blog_profile_picture_url(obj)
     profile_picture = find_profile_for(obj).profile_picture
 
     if profile_picture.attached?
@@ -13,7 +13,7 @@ module BlogsHelper
     end
   end
 
-  def full_name(obj)
+  def blog_full_name(obj)
     profile = find_profile_for(obj)
     return profile.first_name + " " + profile.last_name
   end

@@ -8,9 +8,9 @@ class FollowsController < ApplicationController
 
     if follow.save
       notify_user("#{current_user.username} started following you.", current_user.id, "User", params[:user_id])
-      render json: follow, status: :created
+      redirect_to profile_path(follow.user.username)
     else
-      render json: follow.errors, status: :forbidden
+      redirect_to profile_path(follow.user.username), status: :forbidden
     end
   end
 
@@ -19,7 +19,7 @@ class FollowsController < ApplicationController
     authorize! :destroy, follow
 
     follow.destroy
-    render json: follow
+    redirect_to profile_path(follow.user.username)
   end
 
   def list_followers

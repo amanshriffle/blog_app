@@ -1,26 +1,29 @@
+
 <%= form_with model: blog do |form| %>
-  <div>
-    <%= form.label :title %><br>
-    <%= form.text_field :title %>
+
+  <div class="mb-3">
+    <%= form.label :title, class: "form-label" %>
+    <%= form.text_field :title, class: "form-control", required: true %>
     <% blog.errors.full_messages_for(:title).each do |message| %>
-      <div><%= message %></div>
+      <b class="text-danger"><%= message %></b>
     <% end %>
-  </div> <br>
-
-  <div>
-    <%= form.label :body %><br>
-    <%= form.text_area :body %>
-    <% blog.errors.full_messages_for(:body).each do |message| %>
-      <div><%= message %></div>
-    <% end %>
-  </div><br>
-
-  <div>
-    <%= form.label :visible %>
-    <%= form.check_box :visible %>
-  </div><br>
-
-  <div>
-    <%= form.submit %>
   </div>
+
+  <div class="mb-3">
+    <%= form.label :body, class: "form-label" %>
+    <%= form.text_area :body, class: "form-control", rows: 5, required: true %>
+    <% blog.errors.full_messages_for(:body).each do |message| %>
+      <b class="text-danger"><%= message %></b>
+    <% end %>
+  </div>
+
+  <div class="form-check mb-3">
+    <%= form.check_box :visible, class: "form-check-input" %>
+    <%= form.label :visible, class: "form-check-label" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.file_field :images, class: "form-control" %>
+  </div>
+  <%= form.submit class: "btn btn-primary" %>
 <% end %>

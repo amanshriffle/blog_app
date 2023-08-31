@@ -15,7 +15,8 @@ class ApplicationController < ActionController::Base
       decoded = jwt_decode(token)
       @current_user = User.find(decoded[:user_id])
     else
-      render plain: "Authorization failed, please use valid JWT.", status: :unauthorized
+      flash[:notice] = "Please login first!!."
+      redirect_to login_path
     end
   end
 
@@ -23,7 +24,8 @@ class ApplicationController < ActionController::Base
     profile = current_user.profile
 
     if profile.first_name.nil? || profile.last_name.nil? || profile.date_of_birth.nil?
-      render json: { error: "Please update your profile details first." }, status: :forbidden
+      flash[:notice] = "Please update your profile details first."
+      redirect_to edit_profile_path(current_user.username)
     else
       yield
     end

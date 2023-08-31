@@ -1,22 +1,28 @@
 class ProfilesController < ApplicationController
-  skip_around_action :check_profile, only: %i[show update]
-  before_action :set_profile, except: %i[index search]
+  skip_around_action :check_profile, only: %i[update edit]
+  around_action :check_profile, only: :show, if: :check_user
 
   def index
     render json: Profile.all
   end
 
+  def edit
+    @profile = Profile.joins(:user).find_by!('users.username': params[:username])
+    authorize! :update, @profile
+  end
+
   def show
-    render json: @profile, include: { user: %i[blogs followers following] }
+    @profile = Profile.eager_load(user: :blogs).find_by!('users.username': params[:username])
   end
 
   def update
+    @profile = Profile.joins(:user).find_by!('users.username': params[:username])
     authorize! :update, @profile
 
     if @profile.update(profile_params)
-      render json: @profile
+      redirect_to profile_path(@profile.user.username)
     else
-      render json: @profile.errors, status: :unprocessable_entity
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -30,10 +36,10 @@ class ProfilesController < ApplicationController
   private
 
   def profile_params
-    params.permit(:first_name, :last_name, :date_of_birth, :about, :profile_picture)
+    params.require(:profile).permit(:first_name, :last_name, :date_of_birth, :about, :profile_picture)
   end
 
-  def set_profile
-    @profile = Profile.joins(:user).find_by!('users.username': params[:username])
+  def check_user
+    @current_user.id == Profile.joins(:user).find_by!("users.username" => params[:username]).user_id
   end
 end

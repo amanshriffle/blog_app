@@ -1,8 +1,7 @@
 class BlogsController < ApplicationController
-  #skip_before_action :authenticate_request, only: %i[index show]
-  skip_around_action :check_profile, except: :create
+  skip_around_action :check_profile, except: [:create, :new]
 
-  load_and_authorize_resource
+  load_and_authorize_resource except: %i[new create]
 
   def index
     @blogs = Blog.includes(:user).visible
@@ -25,15 +24,17 @@ class BlogsController < ApplicationController
     @blog = Blog.new
   end
 
+  def edit
+    @blog = Blog.find(params[:id])
+  end
+
   def create
     @blog = current_user.blogs.build(blog_params)
 
     if @blog.save
       redirect_to blog_path(@blog)
-      #render json: blog, status: :created, adapter: nil
     else
-      redirect_to action: :new
-      #render json: blog.errors, status: :unprocessable_entity
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -41,7 +42,7 @@ class BlogsController < ApplicationController
     if @blog.update(blog_params)
       redirect_to @blog
     else
-      render json: @blog.errors, status: :unprocessable_entity
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -68,6 +69,6 @@ class BlogsController < ApplicationController
   private
 
   def blog_params
-    params.permit(:title, :body, :visible)
+    params.require(:blog).permit(:title, :body, :visible)
   end
 end

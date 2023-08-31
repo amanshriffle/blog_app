@@ -1,4 +1,17 @@
-<div>
-    <strong>Comment: </strong><%= comment.comment_text %><br>
-    <strong>Comment by: </strong> <%= comment.user.username %>
-</div><br>
+<ul class="list-group">
+  <li class="list-group-item">
+    <img src= <%= blog_profile_picture_url(comment) %> alt="Author Profile" width="50" height="50" class="rounded-circle me-2">
+    <%= link_to "#{blog_full_name(comment)}", profile_path(comment.user.username), class: "text-secondary link-offset-2 link-underline link-underline-opacity-25" %>
+    <p onclick=<%= comment_path(comment) %>> <%= comment.comment_text %> </p>
+
+    <% if @current_user.id == comment.user_id %>
+      <%= link_to "Delete", comment_path(comment), class: "btn btn-danger mb-1", data: { turbo_method: "delete" }, style: style = "--bs-btn-padding-y: .30rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;" %>
+    <% end %>
+
+    <p class="card-text">
+      <small class="text-muted">
+        posted on <%= comment.created_at.to_date.to_fs(:rfc822) %>
+      </small>
+    </p>
+  </li>
+</ul>

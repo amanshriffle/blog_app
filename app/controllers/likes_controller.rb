@@ -1,5 +1,6 @@
 class LikesController < ApplicationController
   include NotifyUser
+  skip_around_action :check_profile, except: :create
   before_action :set_blog
 
   def create

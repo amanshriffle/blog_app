@@ -1,4 +1,4 @@
-
+<%= render "blogs/navbar" %>
   <div class="container mt-4">
     <div class="row">
       <div class="col-md-8 offset-md-2">
@@ -6,10 +6,19 @@
           <div class="card-body">
             <h5 class="card-title">Notifications</h5>
             <ul class="list-group">
-              <li class="list-group-item">New comment on your blog post</li>
-              <li class="list-group-item">Your post got featured</li>
-              <li class="list-group-item">You have a new follower</li>
-              <li class="list-group-item">Someone liked your blog</li>
+              <% @notifications.each do |n| %>
+                <li class="list-group-item">
+                  <%= n.notification_text %>
+                  <% unless n.refer_to_type == "User" %>
+                    <%= link_to "Go to source", n.refer_to %>
+                  <% else %>
+                    <%= link_to "Go to source", profile_path(n.refer_to.username) %>
+                  <% end %>
+                  <span class="text-secondary badge">
+                    <%= link_to "Delete", notification_path(n), data: { turbo_method: "delete" } %>
+                  </span><br>
+                </li>
+              <% end %>
             </ul>
           </div>
         </div>

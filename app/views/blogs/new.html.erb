@@ -1,55 +1,14 @@
-<h1>New Blog</h1>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Create New Blog</title>
-  <!-- Include Bootstrap CSS link -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container">
-      <a class="navbar-brand" href="#">Blog Site</a>
-    </div>
-  </nav>
+<%= render "blogs/navbar" %>
 
-  <div class="container mt-4">
-    <div class="row">
-      <div class="col-md-8 offset-md-2">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Create New Blog</h5>
-            <form>
-              <div class="mb-3">
-                <label for="blogTitle" class="form-label">Title</label>
-                <input type="text" class="form-control" id="blogTitle" required>
-              </div>
-              <div class="mb-3">
-                <label for="blogBody" class="form-label">Body</label>
-                <textarea class="form-control" id="blogBody" rows="5" required></textarea>
-              </div>
-              <div class="form-check mb-3">
-                <input type="checkbox" class="form-check-input" id="visibilityCheckbox">
-                <label class="form-check-label" for="visibilityCheckbox">Visible</label>
-              </div>
-              <div class="mb-3">
-                <label for="blogPicture" class="form-label">Attach Picture</label>
-                <input type="file" class="form-control" id="blogPicture">
-              </div>
-              <button type="submit" class="btn btn-primary">Create Blog</button>
-            </form>
-          </div>
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title mb-3">Create New Blog</h5>
+          <%= render "form", blog: @blog %>
         </div>
       </div>
     </div>
   </div>
-
-  <!-- Include Bootstrap JS scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
-
-
-<%= render "form", blog: @blog %>
+</div>
