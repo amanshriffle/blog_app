@@ -11,7 +11,7 @@ class CommentsController < ApplicationController
   end
 
   def show
-    render json: @comment
+    #render json: @comment
   end
 
   def create
@@ -19,7 +19,11 @@ class CommentsController < ApplicationController
 
     generate_notification if @comment.save
 
-    redirect_to blog_path(@comment.blog)
+    if @comment.parent_comment_id.nil?
+      redirect_to blog_path(@comment.blog)
+    else
+      redirect_to comment_path(@comment.parent_comment)
+    end
   end
 
   def update
@@ -33,7 +37,11 @@ class CommentsController < ApplicationController
   def destroy
     @comment.destroy
 
-    redirect_to blog_path(@comment.blog)
+    if @comment.parent_comment_id.nil?
+      redirect_to blog_path(@comment.blog)
+    else
+      redirect_to comment_path(@comment.parent_comment)
+    end
   end
 
   private
