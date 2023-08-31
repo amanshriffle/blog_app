@@ -32,6 +32,6 @@ class ApplicationController < ActionController::Base
   end
 
   def handle_access_denied
-    render json: { error: "User is not authorized to perform this action" }, status: :unauthorized
+    render "errors/401"
   end
 end

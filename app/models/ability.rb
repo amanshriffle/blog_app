@@ -9,7 +9,7 @@ class Ability
     can :read, Comment
 
     return if user.blank?
-
+    can :manage, User, { user: }
     can :read, Profile
     can :update, Profile, { user: }
     can :read, Blog, { visible: false, user: }

@@ -11,6 +11,9 @@ class UsersController < ApplicationController
     render json: current_user, include: :profile
   end
 
+  def edit
+  end
+
   def create
     @user = User.new(user_params)
 
@@ -25,10 +28,10 @@ class UsersController < ApplicationController
   end
 
   def update
-    if current_user.update(user_params)
-      redirect_to user_path
+    if @current_user.update(user_params)
+      redirect_to profile_path(current_user.username)
     else
-      render json: current_user.errors, status: :unprocessable_entity
+      render :edit
     end
   end
 
@@ -41,6 +44,6 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.permit(:username, :email, :password)
+    params.require(:user).permit(:username, :email, :password)
   end
 end
