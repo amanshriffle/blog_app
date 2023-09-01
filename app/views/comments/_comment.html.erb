@@ -5,7 +5,8 @@
     <%= link_to comment.comment_text, comment_path(comment), class: "text-dark my-2", style: "display: block; text-decoration: none" %>
 
     <% if @current_user.id == comment.user_id %>
-      <%= link_to "Delete", comment_path(comment), class: "btn btn-danger mb-1", data: { turbo_method: "delete" }, style: style = "--bs-btn-padding-y: .30rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;" %>
+      <%= link_to "Delete", comment_path(comment), class: "btn btn-outline-danger mb-1", data: { turbo_confirm: "Are you sure", turbo_method: "delete" }, style: "--bs-btn-padding-y: .30rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;" %>
+      <%= link_to "Edit", edit_comment_path(comment), class: "btn btn-outline-primary mb-1", style: "--bs-btn-padding-y: .30rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;" %>
     <% end %>
 
     <p class="card-text">

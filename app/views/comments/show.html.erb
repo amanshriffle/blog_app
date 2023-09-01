@@ -30,8 +30,9 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Reply on Comment</h5>
-            <%= form_with url: blog_comments_path(@comment.blog) + "?parent_comment_id=#{@comment.id}" do |form| %>
+            <%= form_with model: [@comment.blog, @comment.blog.comments.build] do |form| %>
               <div class="mb-3">
+                <%= form.hidden_field :parent_comment_id, value: @comment.id %>
                 <%= form.label :comment, "Comment", class: "form-label" %>
                 <%= form.text_area :comment_text, class: "form-control", rows: "3", required: true %>
               </div>

@@ -8,11 +8,10 @@
             <ul class="list-group">
               <% @notifications.each do |n| %>
                 <li class="list-group-item">
-                  <%= n.notification_text %>
-                  <% unless n.refer_to_type == "User" %>
-                    <%= link_to "Go to source", n.refer_to %>
+                  <% if n.refer_to_type == "User" %>
+                    <%= link_to n.notification_text, profile_path(n.refer_to.username), class: "text-dark my-2", style: "text-decoration: none" %>
                   <% else %>
-                    <%= link_to "Go to source", profile_path(n.refer_to.username) %>
+                    <%= link_to n.notification_text, n.refer_to, class: "text-dark my-2", style: "text-decoration: none" %>
                   <% end %>
                   <span class="text-secondary badge">
                     <%= link_to "Delete", notification_path(n), data: { turbo_method: "delete" } %>

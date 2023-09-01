@@ -18,7 +18,7 @@
             <%= link_to "Comment: #{@blog.comments.count}", "#list_comments", class: "btn btn-outline-secondary" %>
 
             <% if @current_user.id == @blog.user_id %>
-                <%= link_to "Delete", blog_path(@blog), class: "btn btn-danger mb-1", data: { turbo_method: "delete" }, style: style = "--bs-btn-padding-y: .30rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;" %>
+                <%= link_to "Delete", blog_path(@blog), class: "btn btn-danger mb-1", data: { turbo_confirm: "Are you sure", turbo_method: "delete" }, style: style = "--bs-btn-padding-y: .30rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;" %>
                 <%= link_to "Edit", edit_blog_path(@blog), class: "btn btn-primary mb-1", style: style = "--bs-btn-padding-y: .30rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;" %>
             <% end %>
 
@@ -35,7 +35,7 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Leave a Comment</h5>
-            <%= render "comments/form" %>
+            <%= render "comments/form", blog: @blog, child_obj: @blog.comments.build %>
           </div>
         </div>
 

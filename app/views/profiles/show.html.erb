@@ -6,8 +6,10 @@
           <div class="card-body">
             <img src=<%= profile_picture_url %> alt="User Profile" class="img-fluid rounded-circle mb-3">
             <h4 style= 'display: inline' class="text-dark card-title"><%= user.username.titleize %></h4>
-            <%= link_to "Edit", edit_user_path, class: "btn btn-warning", style: "--bs-btn-padding-y: .30rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;" %>
-            <p class="card-text">Blogs: <%= user.blogs.size %></p>
+
+            <%= (@profile.user_id == @current_user.id) ? (link_to "Edit", edit_user_path, class: "btn btn-outline-success ms-2", style: "--bs-btn-padding-y: .30rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;") : "" %>
+
+            <p class="card-text mt-2">Blogs: <%= user.blogs.size %></p>
             <p class="card-text">Followers: <%= user.followers.count("*") %></p>
             <p class="card-text">Following: <%= user.following.count("*") %></p>
 
