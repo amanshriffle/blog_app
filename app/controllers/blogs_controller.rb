@@ -54,9 +54,13 @@ class BlogsController < ApplicationController
 
   def search
     key = "%#{params[:key]}%"
-    @blogs = Blog.where("title LIKE :key OR body LIKE :key", { key: })
-
-    render "index"
+    if params[:option] == "Blog"
+      @blogs = Blog.where("title LIKE :key OR body LIKE :key", { key: })
+      render "index"
+    else
+      @profiles = Profile.select("users.username, profiles.*").joins(:user).where("users.username LIKE :key OR first_name LIKE :key OR last_name LIKE :key", { key: })
+      render "profiles/search_result", layout: "card_for_list"
+    end
   end
 
   private

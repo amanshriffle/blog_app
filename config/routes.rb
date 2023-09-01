@@ -18,8 +18,9 @@ Rails.application.routes.draw do
   resources :blogs do
     resources :comments, shallow: true, except: :index
     resource :like, only: [:create, :destroy]
-    get "/search", action: "search", on: :collection
   end
+
+  get "/search", to: "blogs#search"
 
   scope "/activity", controller: "activities", as: :activity do
     get "/drafts", action: :drafts
