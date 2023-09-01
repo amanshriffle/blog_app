@@ -5,6 +5,12 @@
     <div class="col-md-8">
       <%= render @blogs %>
     </div>
+    <div class="col-md-4 text-end">
+      <%= form_with url: search_blogs_path, class: "form-inline my-2 my-lg-0", method: "get" do |form| %>
+        <%= form.text_field :key, placeholder: "Search", class: "form-control" %>
+        <%= form.submit "Search", class: "btn btn-outline-primary" %>
+      <% end %>
+    </div>
   </div>
 </div>
 

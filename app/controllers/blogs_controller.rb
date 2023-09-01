@@ -1,6 +1,6 @@
 class BlogsController < ApplicationController
   skip_around_action :check_profile, except: [:create, :new]
-  load_and_authorize_resource except: %i[new create]
+  load_and_authorize_resource except: %i[new create search]
   layout "card_for_form", only: %i[new edit create update]
 
   def index
@@ -52,18 +52,11 @@ class BlogsController < ApplicationController
     redirect_to blogs_path
   end
 
-  def user_blogs
-    user = User.find_by!(username: params[:username])
-
-    render json: user.blogs, adapter: nil if user.id == current_user.id
-    render json: user.blogs.visible, adapter: nil
-  end
-
   def search
     key = "%#{params[:key]}%"
-    blogs = Blog.where("title LIKE :key OR body LIKE :key", { key: })
+    @blogs = Blog.where("title LIKE :key OR body LIKE :key", { key: })
 
-    render json: blogs
+    render "index"
   end
 
   private

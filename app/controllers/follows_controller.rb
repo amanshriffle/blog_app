@@ -1,6 +1,8 @@
 class FollowsController < ApplicationController
+  LIST = %i[list_followers list_following]
   skip_around_action :check_profile, except: :create
-  before_action :set_user, only: %i[list_followers list_following]
+  before_action :set_user, only: LIST
+  layout "card_for_list", only: LIST
   include NotifyUser
 
   def create
@@ -8,10 +10,9 @@ class FollowsController < ApplicationController
 
     if follow.save
       notify_user("#{current_user.username} started following you.", current_user.id, "User", params[:user_id])
-      redirect_to profile_path(follow.user.username)
-    else
-      redirect_to profile_path(follow.user.username), status: :forbidden
     end
+
+    redirect_to profile_path(follow.user.username)
   end
 
   def destroy
@@ -19,18 +20,15 @@ class FollowsController < ApplicationController
     authorize! :destroy, follow
 
     follow.destroy
-    #redirect_to profile_path(follow.user.username)
-    render js: "window.location.reload();"
+    redirect_to profile_path(follow.user.username)
   end
 
   def list_followers
     @followers = @user.followers.eager_load(follower_user: :profile)
-    render layout: "card_for_list"
   end
 
   def list_following
     @following = @user.following.eager_load(user: :profile)
-    render layout: "card_for_list"
   end
 
   private

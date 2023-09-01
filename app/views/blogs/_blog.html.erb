@@ -1,6 +1,7 @@
 <div class="card mb-4">
   <div class="card-body">
-    <h5 class="card-title"><%= blog.title %></h5>
+    <h5 class="card-title" style= "display: inline"><%= blog.title %></h5>
+    <b class="ms-3 text-danger" ><%= (blog.visible == true) ? "" : "[DRAFT] " %></b>
     <p class="card-text">
       <small class="text-muted">
         Posted on <%= blog.created_at.to_date %> by <%= link_to blog.user.username, profile_path(blog.user.username) %>

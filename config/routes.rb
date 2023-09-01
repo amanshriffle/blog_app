@@ -1,26 +1,24 @@
 Rails.application.routes.draw do
   root "authentication#show"
-  get "/signup", to: "users#new"
 
-  resource :login, controller: :authentication, path_names: { new: :login }, only: %i[show create destroy]
+  resource :login, controller: :authentication, only: %i[show create destroy]
 
-  resource :user, except: :new
+  resource :user, path_names: { new: :signup }
   resource :follow, only: [:create, :destroy]
   resources :notifications, only: [:index, :destroy]
 
-  resources :profiles, only: [:index, :show, :edit, :update], param: :username do
+  resources :profiles, except: [:new, :destroy], param: :username do
     post "/search", action: "search", on: :collection
     member do
-      get "/blogs", to: "blogs#user_blogs", as: :user_blogs
       get "/followers", to: "follows#list_followers"
       get "/following", to: "follows#list_following"
     end
   end
 
   resources :blogs do
-    resources :comments, shallow: true
+    resources :comments, shallow: true, except: :index
     resource :like, only: [:create, :destroy]
-    post "/search", action: "search", on: :collection
+    get "/search", action: "search", on: :collection
   end
 
   scope "/activity", controller: "activities", as: :activity do

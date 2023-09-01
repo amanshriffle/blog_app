@@ -3,13 +3,6 @@ class CommentsController < ApplicationController
   load_and_authorize_resource except: :create
   include NotifyUser
 
-  def index
-    blog = Blog.find(params[:blog_id])
-    comments = blog.comments
-
-    render json: comments, include: :user
-  end
-
   def show
     render layout: "card_to_show"
   end
@@ -30,7 +23,7 @@ class CommentsController < ApplicationController
     if @comment.update(comment_params)
       redirect_to_comment_or_blog
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, layout: "card_for_form", status: :unprocessable_entity
     end
   end
 

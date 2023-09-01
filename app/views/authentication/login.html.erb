@@ -2,7 +2,7 @@
   <div class="row">
     <div class= 'col-md-4'>
       <h2>Login</h2>
-      <%= form_with url: "/login" do |form| %>
+      <%= form_with url: login_path do |form| %>
 
         <div class="mb-3">
           <%= form.label :username, "Username or Email:", class: "form-label" %>
@@ -20,7 +20,7 @@
       <% end %>
 
       <div class="mt-3">
-        <%= link_to "Create an account!", signup_path %>
+        <%= link_to "Create an account!", new_user_path %>
       </div>
     </div>
   </div>
