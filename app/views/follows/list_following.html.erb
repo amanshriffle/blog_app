@@ -1,0 +1,25 @@
+<%= render "blogs/navbar" %>
+  <div class="container mt-4">
+    <div class="row">
+      <div class="col-md-8 offset-md-2">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Following</h5>
+            <ul class="list-group">
+              <% @following.each do |f| %>
+                <li class="list-group-item">
+                  <img src= <%= follow_profile_picture_url(f.user) %> alt="Author Profile" width="50" height="50" class="rounded-circle me-2">
+                  <%= link_to f.user.username, profile_path(f.user.username), class: "text-secondary link-offset-2 link-underline link-underline-opacity-25" %>
+                  <% if f.follower_user_id == @current_user.id %>
+                    <span class="text-secondary badge">
+                      <%= link_to "Unfollow", follow_path + "?id=#{f.id}", class: "ms-5 btn btn-outline-danger", data: { turbo_method: "delete" }, style: "--bs-btn-padding-y: .30rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;" %>
+                    </span><br>
+                  <% end %>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

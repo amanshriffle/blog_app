@@ -23,11 +23,11 @@ class FollowsController < ApplicationController
   end
 
   def list_followers
-    render json: @user.followers, each_serializer: FollowSerializer, include: :follower_user
+    @followers = @user.followers.eager_load(follower_user: :profile)
   end
 
   def list_following
-    render json: @user.following, each_serializer: FollowSerializer, include: :user
+    @following = @user.following.eager_load(user: :profile)
   end
 
   private

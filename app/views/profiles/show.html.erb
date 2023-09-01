@@ -10,8 +10,8 @@
             <%= (@profile.user_id == @current_user.id) ? (link_to "Edit", edit_user_path, class: "btn btn-outline-success ms-2", style: "--bs-btn-padding-y: .30rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;") : "" %>
 
             <p class="card-text mt-2">Blogs: <%= user.blogs.size %></p>
-            <p class="card-text">Followers: <%= user.followers.count("*") %></p>
-            <p class="card-text">Following: <%= user.following.count("*") %></p>
+            <%= link_to "Followers: #{user.followers.count("*")}", followers_profile_path(user.username), class: "mb-2 text-dark", style: "display: block; text-decoration: none" %>
+            <%= link_to "Following: #{user.following.count("*")}", following_profile_path(user.username), class: "mb-2 text-dark", style: "display: block; text-decoration: none" %>
 
             <% unless @profile.user_id == @current_user.id %>
               <% if find_follow %>
@@ -20,7 +20,7 @@
                 <%= link_to "Follow", (follow_path + "?user_id=#{@profile.user_id}"), data: { turbo_method: "post" }, class: "btn btn-success" %>
               <% end %>
             <% else %>
-              <%= link_to "Edit Profile", edit_profile_path(user.username), class: "btn btn-secondary" %>
+              <%= link_to "Edit Profile", edit_profile_path(user.username), class: "mt-2 btn btn-secondary" %>
             <% end %>
           </div>
         </div>

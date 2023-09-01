@@ -5,8 +5,8 @@ class User < ApplicationRecord
   has_one :picture, as: :imageable, dependent: :destroy
   has_many :blogs, dependent: :destroy
   has_many :notifications, -> { order created_at: :desc }, dependent: :destroy
-  has_many :followers, -> { select :id, :follower_user_id }, class_name: "FollowersFollowing", dependent: :destroy
-  has_many :following, -> { select :id, :user_id }, class_name: "FollowersFollowing", foreign_key: :follower_user_id, dependent: :destroy, inverse_of: :follower_user
+  has_many :followers, class_name: "FollowersFollowing", dependent: :destroy
+  has_many :following, class_name: "FollowersFollowing", foreign_key: :follower_user_id, dependent: :destroy, inverse_of: :follower_user
   has_many :comments, dependent: :destroy
   has_many :likes, dependent: :destroy
   has_many :liked_blogs, through: :likes, source: :blog
