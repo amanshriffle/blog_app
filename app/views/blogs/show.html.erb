@@ -1,50 +1,42 @@
-  <%= render "navbar" %>
+<div class="card mb-4">
+  <div class="card-body">
+    <h5 class="card-title"><%= @blog.title %></h5>
+    <%= render "post_date_and_author" %>
+    <p class="card-text"><%= @blog.body %></p>
 
-  <div class="container mt-4">
-    <div class="row">
-      <div class="col-md-8">
-        <div class="card mb-4">
-          <div class="card-body">
-            <h5 class="card-title"><%= @blog.title %></h5>
-            <%= render "post_date_and_author" %>
-            <p class="card-text"><%= @blog.body %></p>
+    <% if @blog.likes.find_by(user_id: @current_user.id) %>
+      <%= link_to "Like: #{@blog.likes_count || "0"}", blog_like_path(@blog.id), class: "text-dark btn btn-info", data: { turbo_method: "delete" } %>
+    <% else %>
+      <%= link_to "Like: #{@blog.likes_count || "0"}", blog_like_path(@blog.id), class: "btn btn-outline-secondary", data: { turbo_method: "post" } %>
+    <% end %>
 
-            <% if @blog.likes.find_by(user_id: @current_user.id) %>
-              <%= link_to "Like: #{@blog.likes_count || "0"}", blog_like_path(@blog.id), class: "text-dark btn btn-info", data: { turbo_method: "delete" } %>
-            <% else %>
-              <%= link_to "Like: #{@blog.likes_count || "0"}", blog_like_path(@blog.id), class: "btn btn-outline-secondary", data: { turbo_method: "post" } %>
-            <% end %>
+    <%= link_to "Comment: #{@blog.comments.count}", "#list_comments", class: "btn btn-outline-secondary" %>
 
-            <%= link_to "Comment: #{@blog.comments.count}", "#list_comments", class: "btn btn-outline-secondary" %>
+    <% if @current_user.id == @blog.user_id %>
+        <%= link_to "Delete", blog_path(@blog), class: "btn btn-danger mb-1", data: { turbo_confirm: "Are you sure", turbo_method: "delete" }, style: style = "--bs-btn-padding-y: .30rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;" %>
+        <%= link_to "Edit", edit_blog_path(@blog), class: "btn btn-primary mb-1", style: style = "--bs-btn-padding-y: .30rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;" %>
+    <% end %>
 
-            <% if @current_user.id == @blog.user_id %>
-                <%= link_to "Delete", blog_path(@blog), class: "btn btn-danger mb-1", data: { turbo_confirm: "Are you sure", turbo_method: "delete" }, style: style = "--bs-btn-padding-y: .30rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;" %>
-                <%= link_to "Edit", edit_blog_path(@blog), class: "btn btn-primary mb-1", style: style = "--bs-btn-padding-y: .30rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;" %>
-            <% end %>
-
-            <div class="d-flex align-items-center my-3">
-              <img src= <%= blog_profile_picture_url(@blog) %> alt="Author Profile" width="100" height="100" class="rounded-circle me-2">
-              <h5 class="card-title">
-                <p>Writer:</p>
-                <%= link_to "#{blog_full_name(@blog)}", profile_path(@blog.user.username), class: "link-offset-2 text-success" %>
-              </h5>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Leave a Comment</h5>
-            <%= render "comments/form", blog: @blog, child_obj: @blog.comments.build %>
-          </div>
-        </div>
-
-        <div class="card mb-4">
-          <div class="card-body">
-            <h5 id="list_comments" class="card-title">Comments: </h5>
-            <%= render @comments %>
-          </div>
-        </div>
-      </div>
+    <div class="d-flex align-items-center my-3">
+      <img src= <%= blog_profile_picture_url(@blog) %> alt="Author Profile" width="100" height="100" class="rounded-circle me-2">
+      <h5 class="card-title">
+        <p>Writer:</p>
+        <%= link_to "#{blog_full_name(@blog)}", profile_path(@blog.user.username), class: "link-offset-2 text-success" %>
+      </h5>
     </div>
   </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Leave a Comment</h5>
+    <%= render "comments/form", blog: @blog, reply: false %>
+  </div>
+</div>
+
+<div class="card mb-4">
+  <div class="card-body">
+    <h5 id="list_comments" class="card-title">Comments: </h5>
+    <%= render @comments %>
+  </div>
+</div>

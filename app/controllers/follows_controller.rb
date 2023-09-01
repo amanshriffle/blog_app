@@ -19,15 +19,18 @@ class FollowsController < ApplicationController
     authorize! :destroy, follow
 
     follow.destroy
-    redirect_to profile_path(follow.user.username)
+    #redirect_to profile_path(follow.user.username)
+    render js: "window.location.reload();"
   end
 
   def list_followers
     @followers = @user.followers.eager_load(follower_user: :profile)
+    render layout: "card_for_list"
   end
 
   def list_following
     @following = @user.following.eager_load(user: :profile)
+    render layout: "card_for_list"
   end
 
   private

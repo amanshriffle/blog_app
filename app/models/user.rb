@@ -2,7 +2,6 @@ class User < ApplicationRecord
   has_secure_password
 
   has_one :profile, dependent: :destroy
-  has_one :picture, as: :imageable, dependent: :destroy
   has_many :blogs, dependent: :destroy
   has_many :notifications, -> { order created_at: :desc }, dependent: :destroy
   has_many :followers, class_name: "FollowersFollowing", dependent: :destroy

@@ -11,6 +11,7 @@ class CommentsController < ApplicationController
   end
 
   def show
+    render layout: "card_to_show"
   end
 
   def create
@@ -22,6 +23,7 @@ class CommentsController < ApplicationController
   end
 
   def edit
+    render layout: "card_for_form"
   end
 
   def update

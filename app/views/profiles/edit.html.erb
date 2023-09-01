@@ -1,53 +1,36 @@
-<%= render "blogs/navbar" %>
-  <div class="container mt-4">
-    <div class="row">
-      <div class="col-md-8 offset-md-2">
-        <div class="card">
-          <div class="card-body">
-          <b class="text-danger mb-3"><%= flash[:notice] %></b>
-            <h5 class="card-title">Edit Profile</h5>
+<b class="text-danger mb-3"><%= flash[:notice] %></b>
+<h5 class="card-title">Edit Profile</h5>
 
-            <%= form_with url: profile_path(@profile.user.username), model: @profile do |form| %>
+<%= form_with url: profile_path(@profile.user.username), model: @profile do |form| %>
 
-              <div class="mb-3">
-                <%= form.label :first_name, "First Name", class: "form-label" %>
-                <%= form.text_field :first_name, class: "form-control", required: true %>
-                <% @profile.errors.full_messages_for(:first_name).each do |message| %>
-                  <b class="text-danger"><%= message %></b>
-                <% end %>
-              </div>
-
-              <div class="mb-3">
-                <%= form.label :last_name, "Last Name", class: "form-label" %>
-                <%= form.text_field :last_name, class: "form-control", required: true %>
-                <% @profile.errors.full_messages_for(:last_name).each do |message| %>
-                  <b class="text-danger"><%= message %></b>
-                <% end %>
-              </div>
-
-              <div class="mb-3">
-                <%= form.label :date_of_birth, "Date of Birth", class: "form-label" %>
-                <%= form.date_field :date_of_birth, class: "form-control", required: true %>
-                <% @profile.errors.full_messages_for(:date_of_birth).each do |message| %>
-                  <b class="text-danger"><%= message %></b>
-                <% end %>
-              </div>
-
-              <div class="mb-3">
-                <%= form.label :about, "About", class: "form-label" %>
-                <%= form.text_area :about, rows: 5, class: "form-control", required: true %>
-              </div>
-
-              <div class="mb-3">
-                <%= form.label :profile_picture, "Profile Picture", class: "form-label" %>
-                <%= form.file_field :profile_picture, class: "form-control" %>
-              </div>
-
-              <%= form.submit "Save Changes", class: "btn btn-primary" %>
-
-            <% end %>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="mb-3">
+    <%= form.label :first_name, "First Name", class: "form-label" %>
+    <%= form.text_field :first_name, class: "form-control", required: true %>
+    <%= render "errors/show_errors", obj: @profile, attr: :first_name %>
   </div>
+
+  <div class="mb-3">
+    <%= form.label :last_name, "Last Name", class: "form-label" %>
+    <%= form.text_field :last_name, class: "form-control", required: true %>
+    <%= render "errors/show_errors", obj: @profile, attr: :last_name %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :date_of_birth, "Date of Birth", class: "form-label" %>
+    <%= form.date_field :date_of_birth, class: "form-control", required: true %>
+    <%= render "errors/show_errors", obj: @profile, attr: :date_of_birth %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :about, "About", class: "form-label" %>
+    <%= form.text_area :about, rows: 5, class: "form-control", required: true %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :profile_picture, "Profile Picture", class: "form-label" %>
+    <%= form.file_field :profile_picture, class: "form-control" %>
+  </div>
+
+  <%= form.submit "Save Changes", class: "btn btn-primary" %>
+
+<% end %>

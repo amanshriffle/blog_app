@@ -3,6 +3,7 @@ class NotificationsController < ApplicationController
 
   def index
     @notifications = current_user.notifications
+    render layout: "card_for_list"
   end
 
   def destroy

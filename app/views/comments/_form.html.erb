@@ -1,4 +1,9 @@
-<%= form_with model: [@blog, @blog.comments.build] do |form| %>
+<%= form_with model: [blog, blog.comments.build] do |form| %>
+
+  <% if reply %>
+    <%= form.hidden_field :parent_comment_id, value: obj.id %>
+  <% end %>
+
   <div class="mb-3">
     <%= form.label :comment, "Comment", class: "form-label" %>
     <%= form.text_area :comment_text, class: "form-control", rows: "3", required: true %>

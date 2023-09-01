@@ -9,6 +9,8 @@ class ProfilesController < ApplicationController
   def edit
     @profile = Profile.joins(:user).find_by!('users.username': params[:username])
     authorize! :update, @profile
+
+    render layout: "card_for_form"
   end
 
   def show
@@ -22,7 +24,7 @@ class ProfilesController < ApplicationController
     if @profile.update(profile_params)
       redirect_to profile_path(@profile.user.username)
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, layout: "card_for_form", status: :unprocessable_entity
     end
   end
 

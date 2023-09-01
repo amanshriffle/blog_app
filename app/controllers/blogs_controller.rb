@@ -1,7 +1,7 @@
 class BlogsController < ApplicationController
   skip_around_action :check_profile, except: [:create, :new]
-
   load_and_authorize_resource except: %i[new create]
+  layout "card_for_form", only: %i[new edit create update]
 
   def index
     @blogs = Blog.includes(:user).visible
@@ -15,7 +15,7 @@ class BlogsController < ApplicationController
   def show
     @comments = @blog.comments.includes(user: :profile)
     respond_to do |format|
-      format.html { render "show" }
+      format.html { render layout: "card_to_show" }
       format.json { render json: @blog }
     end
   end
@@ -69,6 +69,6 @@ class BlogsController < ApplicationController
   private
 
   def blog_params
-    params.require(:blog).permit(:title, :body, :visible)
+    params.require(:blog).permit(:title, :body, :visible, pictures: [])
   end
 end

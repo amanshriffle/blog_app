@@ -2,7 +2,8 @@ class Blog < ApplicationRecord
   belongs_to :user
   has_many :comments, -> { where(parent_comment_id: nil).order created_at: :desc }, dependent: :destroy
   has_many :likes, dependent: :destroy
-  has_many :pictures, as: :imageable, dependent: :destroy
+
+  has_many_attached :pictures
 
   validates :title, uniqueness: { case_sensitive: false }, length: { in: 5..150 }
   validates :body, length: { in: 10..1000 }

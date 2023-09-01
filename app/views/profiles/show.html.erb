@@ -8,16 +8,15 @@
             <h4 style= 'display: inline' class="text-dark card-title"><%= user.username.titleize %></h4>
 
             <%= (@profile.user_id == @current_user.id) ? (link_to "Edit", edit_user_path, class: "btn btn-outline-success ms-2", style: "--bs-btn-padding-y: .30rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;") : "" %>
-
-            <p class="card-text mt-2">Blogs: <%= user.blogs.size %></p>
-            <%= link_to "Followers: #{user.followers.count("*")}", followers_profile_path(user.username), class: "mb-2 text-dark", style: "display: block; text-decoration: none" %>
-            <%= link_to "Following: #{user.following.count("*")}", following_profile_path(user.username), class: "mb-2 text-dark", style: "display: block; text-decoration: none" %>
+            <%= link_to "Blogs: #{user.blogs.size}", "#users_blogs", class: "mb-1 mt-2 text-dark", style: "display: block; text-decoration: none" %>
+            <%= link_to "Followers: #{user.followers.count("*")}", followers_profile_path(user.username), class: "mb-1 text-dark", style: "display: block; text-decoration: none" %>
+            <%= link_to "Following: #{user.following.count("*")}", following_profile_path(user.username), class: "mb-1 text-dark", style: "display: block; text-decoration: none" %>
 
             <% unless @profile.user_id == @current_user.id %>
               <% if find_follow %>
-                <%= link_to "Unfollow", (follow_path + "?id=#{@follow.id}"), data: { turbo_method: "delete" }, class: "btn btn-danger" %>
+                <%= link_to "Unfollow", (follow_path + "?id=#{@follow.id}"), data: { turbo_method: "delete" }, class: "mt-2 btn btn-danger" %>
               <% else %>
-                <%= link_to "Follow", (follow_path + "?user_id=#{@profile.user_id}"), data: { turbo_method: "post" }, class: "btn btn-success" %>
+                <%= link_to "Follow", (follow_path + "?user_id=#{@profile.user_id}"), data: { turbo_method: "post" }, class: "mt-2 btn btn-success" %>
               <% end %>
             <% else %>
               <%= link_to "Edit Profile", edit_profile_path(user.username), class: "mt-2 btn btn-secondary" %>
@@ -36,7 +35,7 @@
           </div>
         </div>
 
-        <div class="card mb-4">
+        <div class="card mb-4" id="users_blogs">
           <div class="card-body">
             <h4 class="card-title">User's Blogs</h4>
             <div class="list-group">

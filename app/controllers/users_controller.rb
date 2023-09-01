@@ -12,6 +12,7 @@ class UsersController < ApplicationController
   end
 
   def edit
+    render layout: "card_for_form"
   end
 
   def create
@@ -31,7 +32,7 @@ class UsersController < ApplicationController
     if @current_user.update(user_params)
       redirect_to profile_path(current_user.username)
     else
-      render :edit
+      render :edit, layout: "card_for_form"
     end
   end
 

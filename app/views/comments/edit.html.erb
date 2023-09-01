@@ -1,18 +1,7 @@
-<%= render "blogs/navbar" %>
-<div class="container mt-4">
-  <div class="row">
-    <div class="col-md-8 offset-md-2">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Edit Comment</h5>
-          <%= form_with model: @comment, method: "patch" do |form| %>
-            <div class="mb-3">
-              <%= form.text_area :comment_text, class: "form-control", rows: "3", required: true %>
-            </div>
-            <%= form.submit "Comment", class: "btn btn-primary" %>
-          <% end %>
-        </div>
-      </div>
-    </div>
+<h5 class="card-title">Edit Comment</h5>
+<%= form_with model: @comment, method: "patch" do |form| %>
+  <div class="mb-3">
+    <%= form.text_area :comment_text, class: "form-control", rows: "3", required: true %>
   </div>
-</div>
+  <%= form.submit "Comment", class: "btn btn-primary" %>
+<% end %>
