@@ -6,6 +6,9 @@ ruby "3.2.2"
 #For authorization
 gem "cancancan"
 
+#For pagination
+gem "kaminari"
+
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.0.6"
 

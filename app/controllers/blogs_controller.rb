@@ -4,7 +4,7 @@ class BlogsController < ApplicationController
   layout "card_for_form", only: %i[new edit create update]
 
   def index
-    @blogs = Blog.includes(:user).visible
+    @blogs = Blog.includes(:user).visible.page(params[:page])
 
     respond_to do |format|
       format.html { render "index" }
