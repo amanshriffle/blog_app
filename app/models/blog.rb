@@ -4,6 +4,7 @@ class Blog < ApplicationRecord
   has_many :likes, dependent: :destroy
 
   has_many_attached :pictures
+  has_many :notifications, as: :refer_to, dependent: :destroy
 
   validates :title, uniqueness: { case_sensitive: false }, length: { in: 5..150 }
   validates :body, length: { in: 10..1000 }

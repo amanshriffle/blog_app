@@ -7,10 +7,6 @@ class UsersController < ApplicationController
     render "signup"
   end
 
-  def show
-    render json: current_user, include: :profile
-  end
-
   def edit
     render layout: "card_for_form"
   end
@@ -36,10 +32,18 @@ class UsersController < ApplicationController
     end
   end
 
-  def destroy
-    current_user.destroy
+  def confirm_password
+    render layout: "card_for_form"
+  end
 
-    redirect_to root_path
+  def destroy
+    if @current_user.authenticate(params[:password])
+      current_user.destroy
+      redirect_to root_path
+    else
+      flash[:alert] = "Password is invalid"
+      redirect_to action: :confirm_password
+    end
   end
 
   private

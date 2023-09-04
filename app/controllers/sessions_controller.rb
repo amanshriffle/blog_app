@@ -1,4 +1,4 @@
-class AuthenticationController < ApplicationController
+class SessionsController < ApplicationController
   skip_before_action :authenticate_request
   skip_around_action :check_profile
 

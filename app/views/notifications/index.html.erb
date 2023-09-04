@@ -9,7 +9,7 @@
       <% end %>
 
       <span class="text-secondary badge">
-        <%= link_to "Delete", notification_path(n), data: { turbo_method: "delete" } %>
+        <%= link_to "Delete", notification_path(n), data: { turbo_confirm: "Are you sure", turbo_method: "delete" } %>
       </span><br>
     </li>
   <% end %>

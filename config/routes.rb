@@ -1,14 +1,15 @@
 Rails.application.routes.draw do
-  root "authentication#show"
+  root "sessions#show"
 
-  resource :login, controller: :authentication, only: %i[show create destroy]
-
-  resource :user, path_names: { new: :signup }
+  resource :login, controller: :sessions, only: %i[show create destroy]
   resource :follow, only: [:create, :destroy]
   resources :notifications, only: [:index, :destroy]
 
-  resources :profiles, except: [:new, :destroy], param: :username do
-    post "/search", action: "search", on: :collection
+  resource :user, path_names: { new: :signup }, except: :show do
+    get "confirm_password", action: "confirm_password"
+  end
+
+  resources :profiles, except: [:new, :destroy, :index], param: :username do
     member do
       get "/followers", to: "follows#list_followers"
       get "/following", to: "follows#list_following"
@@ -21,11 +22,4 @@ Rails.application.routes.draw do
   end
 
   get "/search", to: "blogs#search"
-
-  scope "/activity", controller: "activities", as: :activity do
-    get "/drafts", action: :drafts
-    get "/blogs", action: :blogs
-    get "/likes", action: :likes
-    get "/comments", action: :comments
-  end
 end

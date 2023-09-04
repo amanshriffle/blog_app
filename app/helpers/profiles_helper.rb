@@ -1,6 +1,6 @@
 module ProfilesHelper
-  def profile_picture_url
-    profile_picture = @profile.profile_picture
+  def profile_picture_url(obj)
+    profile_picture = obj.profile_picture
 
     if profile_picture.attached?
       "http://127.0.0.1:3000" + rails_blob_path(profile_picture, host: "localhost:3000")

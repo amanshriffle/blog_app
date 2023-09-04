@@ -3,25 +3,19 @@
   <div class="mb-3">
     <%= form.label :username, class: "form-label" %>
     <%= form.text_field :username, class: "form-control", required: true %>
-    <% @current_user.errors.full_messages_for(:username).each do |message| %>
-      <b class="text-danger"><%= message %></b>
-    <% end %>
+    <%= render "errors/show_errors", obj: @current_user, attr: :username %>
   </div>
 
   <div class="mb-3">
     <%= form.label :email, class: "form-label" %>
     <%= form.text_field :email, class: "form-control", required: true %>
-    <% @current_user.errors.full_messages_for(:email).each do |message| %>
-      <b class="text-danger"><%= message %></b>
-    <% end %>
+    <%= render "errors/show_errors", obj: @current_user, attr: :email %>
   </div>
 
   <div class="mb-3">
     <%= form.label :password, class: "form-label" %>
     <%= form.password_field :password, class: "form-control", rows: 5, required: true %>
-    <% @current_user.errors.full_messages_for(:password).each do |message| %>
-      <b class="text-danger"><%= message %></b>
-    <% end %>
+    <%= render "errors/show_errors", obj: @current_user, attr: :password %>
   </div>
 
   <%= form.submit "Submit", class: "btn btn-primary" %>

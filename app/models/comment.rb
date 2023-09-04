@@ -3,6 +3,7 @@ class Comment < ApplicationRecord
   belongs_to :blog, counter_cache: true
   has_many :replies, class_name: "Comment", foreign_key: "parent_comment_id", dependent: :destroy
   belongs_to :parent_comment, class_name: "Comment", optional: true
+  has_many :notifications, as: :refer_to, dependent: :destroy
 
   validates :comment_text, presence: true, length: { in: 1..100 }
 

@@ -1,7 +1,7 @@
 <ul class="list-group">
   <li class="list-group-item">
-    <img src= <%= blog_profile_picture_url(comment) %> alt="Author Profile" width="50" height="50" class="rounded-circle me-2">
-    <%= link_to "#{blog_full_name(comment)}", profile_path(comment.user.username), class: "text-secondary link-offset-2 link-underline link-underline-opacity-25" %>
+    <img src= <%= profile_picture_url(comment.user.profile) %> alt="Author Profile" width="50" height="50" class="rounded-circle me-2">
+    <%= link_to writer_full_name(comment), profile_path(comment.user.username), class: "text-secondary link-offset-2 link-underline link-underline-opacity-25" %>
     <%= link_to comment.comment_text, comment_path(comment), class: "text-dark my-2", style: "display: block; text-decoration: none" %>
 
     <% if @current_user.id == comment.user_id %>

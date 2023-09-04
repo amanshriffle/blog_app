@@ -1,14 +1,6 @@
 <h5 class="card-title">Followers</h5>
 <ul class="list-group">
   <% @followers.each do |f| %>
-    <li class="list-group-item">
-      <img src= <%= follow_profile_picture_url(f.follower_user) %> alt="Author Profile" width="50" height="50" class="rounded-circle me-2">
-      <%= link_to f.follower_user.username, profile_path(f.follower_user.username), class: "text-secondary link-offset-2 link-underline link-underline-opacity-25" %>
-      <% if f.user_id == @current_user.id %>
-        <span class="text-secondary badge">
-          <%= link_to "Remove", follow_path + "?id=#{f.id}", class: "ms-5 btn btn-outline-danger", data: { turbo_method: "delete" }, style: "--bs-btn-padding-y: .30rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;" %>
-        </span><br>
-      <% end %>
-    </li>
+    <%= render "list_follow", user: f.follower_user, check_id: f.user_id, btn_text: "Remove", follow: f %>
   <% end %>
 </ul>

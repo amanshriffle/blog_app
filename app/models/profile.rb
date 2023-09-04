@@ -9,6 +9,8 @@ class Profile < ApplicationRecord
 
   before_update :format_details
 
+  scope :completed, -> { where.not(first_name: nil, last_name: nil) }
+
   private
 
   def acceptable_image
