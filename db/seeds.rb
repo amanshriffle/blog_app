@@ -1,5 +1,5 @@
 #User
-3.times do |i|
+5.times do |i|
   i += 1
   User.create(username: "user#{i}", email: "user#{i}@email.com", password: "User@#{i}")
 end
@@ -18,7 +18,7 @@ end
 
 #Blog
 User.all.each do |u, i|
-  2.times do |bn|
+  5.times do |bn|
     bn += 1
     u.blogs.create({ title: "Blog no. #{bn} of #{u.username}", body: "Welcome to blog#{bn} of #{u.username}", visible: true })
   end

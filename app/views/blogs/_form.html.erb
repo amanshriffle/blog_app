@@ -18,7 +18,7 @@
   </div>
 
   <div class="mb-3">
-    <%= form.file_field :pictures, class: "form-control" %>
+    <%= form.file_field :pictures, class: "form-control", multiple: true %>
   </div>
   <%= form.submit class: "btn btn-primary" %>
 <% end %>

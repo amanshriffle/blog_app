@@ -11,11 +11,14 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.0].define(version: 2023_08_24_053456) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
-    t.integer "record_id", null: false
-    t.integer "blob_id", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
@@ -34,7 +37,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_24_053456) do
   end
 
   create_table "active_storage_variant_records", force: :cascade do |t|
-    t.integer "blob_id", null: false
+    t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
@@ -43,9 +46,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_24_053456) do
     t.string "title"
     t.text "body"
     t.boolean "visible"
-    t.integer "user_id"
-    t.integer "likes_count"
-    t.integer "comments_count"
+    t.bigint "user_id"
+    t.bigint "likes_count"
+    t.bigint "comments_count"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_blogs_on_user_id"
@@ -53,8 +56,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_24_053456) do
 
   create_table "comments", force: :cascade do |t|
     t.text "comment_text"
-    t.integer "blog_id"
-    t.integer "user_id"
+    t.bigint "blog_id"
+    t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "parent_comment_id"
@@ -63,15 +66,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_24_053456) do
   end
 
   create_table "followers_following", force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "follower_user_id"
+    t.bigint "user_id"
+    t.bigint "follower_user_id"
     t.index ["follower_user_id"], name: "index_followers_following_on_follower_user_id"
     t.index ["user_id"], name: "index_followers_following_on_user_id"
   end
 
   create_table "likes", force: :cascade do |t|
-    t.integer "blog_id"
-    t.integer "user_id"
+    t.bigint "blog_id"
+    t.bigint "user_id"
     t.datetime "created_at"
     t.index ["blog_id"], name: "index_likes_on_blog_id"
     t.index ["user_id"], name: "index_likes_on_user_id"
@@ -80,15 +83,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_24_053456) do
   create_table "notifications", force: :cascade do |t|
     t.string "notification_text"
     t.string "refer_to_type"
-    t.integer "refer_to_id"
-    t.integer "user_id", null: false
+    t.bigint "refer_to_id"
+    t.bigint "user_id", null: false
     t.datetime "created_at"
     t.index ["refer_to_type", "refer_to_id"], name: "index_notifications_on_refer_to"
     t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
   create_table "profiles", force: :cascade do |t|
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.string "first_name"
     t.string "last_name"
     t.date "date_of_birth"

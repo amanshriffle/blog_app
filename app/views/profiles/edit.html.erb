@@ -29,6 +29,7 @@
   <div class="mb-3">
     <%= form.label :profile_picture, "Profile Picture", class: "form-label" %>
     <%= form.file_field :profile_picture, class: "form-control" %>
+    <%= render "errors/show_errors", obj: @profile, attr: :profile_picture %>
   </div>
 
   <%= form.submit "Save Changes", class: "btn btn-primary" %>

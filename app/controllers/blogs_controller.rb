@@ -55,7 +55,7 @@ class BlogsController < ApplicationController
   def search
     key = "%#{params[:key]}%"
     if params[:option] == "Blog"
-      @blogs = Blog.where("title LIKE :key OR body LIKE :key", { key: })
+      @blogs = Blog.where("title LIKE :key OR body LIKE :key", { key: }).page(params[:page])
       render "index"
     else
       @profiles = Profile.completed.select("users.username, profiles.*").joins(:user).where("users.username LIKE :key OR first_name LIKE :key OR last_name LIKE :key", { key: })

@@ -5,7 +5,7 @@ class CreateUsers < ActiveRecord::Migration[7.0]
       t.string :first_name
       t.string :last_name
       t.string :email
-      t.integer :blogs_count
+      t.bigint :blogs_count
       t.timestamps
     end
   end
