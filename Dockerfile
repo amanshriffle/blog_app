@@ -8,13 +8,15 @@ RUN apt-get update -qq && \
     apt-get install -y build-essential libvips && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /usr/share/doc /usr/share/man
-    
+
 # Set the working directory inside the container
 WORKDIR /rails_app
 
 # Set production environment 
-ENV RAILS_LOG_TO_STDOUT="1"
-    RAILS_ENV="production"
+ENV RAILS_LOG_TO_STDOUT="1" \
+    RAILS_SERVE_STATIC_FILES="true" \
+    RAILS_ENV="production" \
+    BUNDLE_WITHOUT="development"
 
 # Copy Gemfile and Gemfile.lock to the working directory
 COPY Gemfile Gemfile.lock ./
